@@ -4,6 +4,12 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 
+//GUI 
+var gui = new dat.GUI();
+var cam = gui.addFolder('Camera');
+cam.add(camera.position, 'x', 500, 500);
+console.log(gui);
+
 renderer = createRenderer(0xdddddd);
 var parent = document.getElementById('canvasContainer');
 parent.appendChild(renderer.domElement);
@@ -43,6 +49,9 @@ var animate = function() {
 
     renderer.render(scene, camera);
 };
+
+
+
 
 animate();
 
