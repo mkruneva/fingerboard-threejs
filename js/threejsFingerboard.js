@@ -3,30 +3,45 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-
 //GUI 
 var gui = new dat.GUI();
 var cam = gui.addFolder('Camera');
 cam.add(camera.position, 'x', 500, 500);
-console.log(gui);
 
+//RENDER
 renderer = createRenderer(0xdddddd);
 var parent = document.getElementById('canvasContainer');
 parent.appendChild(renderer.domElement);
 
+//TEX AND MAT
+// load a texture, set wrap mode to repeat
+var diffTex = new THREE.TextureLoader().load( "tex/beech_wood_albedo.jpg" );
+diffTex.wrapS = THREE.RepeatWrapping;
+diffTex.wrapT = THREE.RepeatWrapping;
+diffTex.repeat.set( 3, 3 );
+var aoTex = new THREE.TextureLoader().load( "tex/beech_wood_ao.png" );
+
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-var material2 = new THREE.MeshBasicMaterial({ color: 0xbbbbbb });
+var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex, color: 0xbbbbbb, map: diffTex, roughness: 0.9 });
 var cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-camera.position.z = 5;
+//LIGHTS
+var ambLight = new THREE.AmbientLight( 0x404040 ); // soft white light
+ambLight.intensity = 5;
+scene.add( ambLight );
 
-var loader = new THREE.OBJLoader();
+var dirLight = new THREE.DirectionalLight( 0xFFFFFF );
+var helper = new THREE.DirectionalLightHelper( dirLight, 5 );
+scene.add( dirLight );
+scene.add( helper );
+
 // load a resource
+var loader = new THREE.OBJLoader();
 loader.load(
     // resource URL
-    'obj/cube.obj',
+    'obj/fingerboard-obj.obj',
     // Function when resource is loaded
     function(object) {
         object.traverse(function(child) {
@@ -34,12 +49,15 @@ loader.load(
                 child.material = material2;
             }
         });
-        object.scale.set(0.5,0.05,0.5);
-        cube.add(object);
+        object.translate.y = 900;
+        scene.add(object);
     }
 );
 
 // loadObject("obj/cube.obj", material);
+
+//Controls
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 var animate = function() {
     requestAnimationFrame(animate);
