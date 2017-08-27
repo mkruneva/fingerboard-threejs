@@ -2,6 +2,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set( -4.5, -47, 491 );
 
 //GUI 
 var gui = new dat.GUI();
@@ -9,7 +10,7 @@ var cam = gui.addFolder('Camera');
 cam.add(camera.position, 'x', 500, 500);
 
 //RENDER
-renderer = createRenderer(0xdddddd);
+renderer = createRenderer(0x666666);
 var parent = document.getElementById('canvasContainer');
 parent.appendChild(renderer.domElement);
 
@@ -49,7 +50,8 @@ loader.load(
                 child.material = material2;
             }
         });
-        object.translate.y = 900;
+        object.rotation.set( 0, 0, 0 );
+        object.position.set( 0, -100, 0 );
         scene.add(object);
     }
 );
@@ -66,9 +68,8 @@ var animate = function() {
     cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
+    console.log(camera.position);
 };
-
-
 
 
 animate();
