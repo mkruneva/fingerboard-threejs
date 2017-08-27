@@ -15,7 +15,6 @@ var parent = document.getElementById('canvasContainer');
 parent.appendChild(renderer.domElement);
 
 //TEX AND MAT
-// load a texture, set wrap mode to repeat
 var diffTex = new THREE.TextureLoader().load( "tex/beech_wood_albedo.jpg" );
 diffTex.wrapS = THREE.RepeatWrapping;
 diffTex.wrapT = THREE.RepeatWrapping;
@@ -74,7 +73,6 @@ var animate = function() {
     cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
-    console.log(camera.position);
 };
 
 
