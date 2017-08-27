@@ -28,6 +28,12 @@ var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex, color: 0xbbbbbb, 
 var cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
+
+//Plane
+var geometry = new THREE.PlaneGeometry( 200, 200, 200 );
+var plane = new THREE.Mesh( geometry, material );
+scene.add( plane );
+
 //LIGHTS
 var ambLight = new THREE.AmbientLight( 0x404040 ); // soft white light
 ambLight.intensity = 5;
