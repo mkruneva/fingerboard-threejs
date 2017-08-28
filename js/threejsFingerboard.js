@@ -10,7 +10,7 @@ var cam = gui.addFolder('Camera');
 cam.add(camera.position, 'x', 500, 500);
 
 //RENDER
-renderer = createRenderer(0x666666);
+renderer = createRenderer(0x222222);
 var parent = document.getElementById('canvasContainer');
 parent.appendChild(renderer.domElement);
 
@@ -23,7 +23,7 @@ var aoTex = new THREE.TextureLoader().load( "tex/beech_wood_ao.png" );
 
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex, color: 0xbbbbbb, map: diffTex, roughness: 0.9 });
+var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex, color: 0xbbbbbb, map: diffTex, roughness: 0.7 });
 var cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
@@ -39,9 +39,14 @@ ambLight.intensity = 5;
 scene.add( ambLight );
 
 var dirLight = new THREE.DirectionalLight( 0xFFFFFF );
-var helper = new THREE.DirectionalLightHelper( dirLight, 5 );
+dirLight.rotation.set( 1, 0, 0 );
+dirLight.position.set( -200, 300, -100 );
+var helper = new THREE.DirectionalLightHelper( dirLight, 0.5 );
 scene.add( dirLight );
 scene.add( helper );
+
+var hemLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+scene.add( hemLight );
 
 // load a resource
 var loader = new THREE.OBJLoader();
