@@ -3,7 +3,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
 scene.add(camera);
-camera.position.set(0, 0, 700);
+camera.position.set(0, 0, 750);
 
 
 //RENDER
@@ -23,19 +23,6 @@ var envMap = new THREE.CubeTextureLoader()
         'posz.jpg',
         'negz.jpg',
     ]);
-
-// var backgroundMap = new THREE.CubeTextureLoader()
-//     .setPath('tex/cubemap2/')
-//     .load([
-//         'posx.jpg',
-//         'negx.jpg',
-//         'posy.jpg',
-//         'negy.jpg',
-//         'posz.jpg',
-//         'negz.jpg',
-//     ]);
-
-// scene.background = backgroundMap;
 
 //TEX AND MAT
 var diffTex = new THREE.TextureLoader().load("tex/beech_wood_albedo.jpg");
