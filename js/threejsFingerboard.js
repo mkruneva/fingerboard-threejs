@@ -39,7 +39,7 @@ var nrmTex = new THREE.TextureLoader().load("tex/beech_wood_anormal.png");
 nrmTex.wrapS = THREE.RepeatWrapping;
 nrmTex.wrapT = THREE.RepeatWrapping;
 nrmTex.repeat.set(3, 3);
-var roughtTex = new THREE.TextureLoader().load("tex/beech_wood_bump.jpg");
+var roughtTex = new THREE.TextureLoader().load("tex/beech_wood_rough.png");
 
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -49,12 +49,9 @@ var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex,
                                                 map: diffTex, 
                                                 normalMap: nrmTex, 
                                                 normalScale: new THREE.Vector3( 0.3, 0.3 ), 
-                                                roughness: 1,
+                                                roughness: 0.96,
                                                 roughnessMap: roughtTex
                  });
-var cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
 
 //LIGHTS
 var ambLight = new THREE.AmbientLight(0x404040); // soft white light
@@ -97,8 +94,8 @@ var controls = new THREE.OrbitControls(camera, renderer.domElement);
 var animate = function() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    // cube.rotation.x += 0.01;
+    // cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 };
