@@ -1,13 +1,8 @@
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 2000);
 camera.position.set(-4.5, -47, 491);
-
-//GUI 
-var gui = new dat.GUI();
-var cam = gui.addFolder('Camera');
-cam.add(camera.position, 'x', 500, 500);
 
 //RENDER
 renderer = createRenderer(0x222222);
@@ -55,17 +50,24 @@ var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex,
 
 //LIGHTS
 var ambLight = new THREE.AmbientLight(0x404040); // soft white light
-ambLight.intensity = 5;
+ambLight.intensity = 2;
 scene.add(ambLight);
 
 var spotLight = new THREE.SpotLight( 0xffffff );
-spotLight.position.set( 100, 1000, 100 );
+spotLight.position.set( 0, 100, 600 );
+spotLight.rotation.set( (45*Math.PI/180), 0, 0 );
+spotLight.intensity = 0.7;
 scene.add(spotLight);
 
-var spotLightHelper = new THREE.SpotLightHelper( spotLight );
-scene.add( spotLightHelper );
+var spotLight2 = new THREE.SpotLight( 0xffffff );
+spotLight2.position.set( 0, 100, -600 );
+spotLight2.rotation.set( (45*Math.PI/180), 0, 0 );
+spotLight2.intensity = 0.7;
+scene.add(spotLight2);
+// var spotLightHelper = new THREE.SpotLightHelper( spotLight2 );
+// scene.add( spotLightHelper );
 
-var hemLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+var hemLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.6);
 scene.add(hemLight);
 
 // load a resource
@@ -87,6 +89,19 @@ loader.load(
 );
 
 // loadObject("obj/cube.obj", material);
+
+
+//GUI 
+var gui = new dat.GUI();
+var cam = gui.addFolder('Camera');
+cam.add(camera.position, 'x', -500, 500);
+// var sportlightGui = gui.addFolder('spot light');
+// sportlightGui.add(spotLight.position, 'x', -500, 500);
+// sportlightGui.add(spotLight.position, 'y', 0, 2000);
+// sportlightGui.add(spotLight.position, 'z', -500, 500);
+// sportlightGui.add(spotLight.rotation, 'x', 0, 2*Math.PI);
+// sportlightGui.add(spotLight.rotation, 'y', 0, 2*Math.PI);
+// sportlightGui.add(spotLight.rotation, 'z', 0, 2*Math.PI);
 
 //Controls
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
