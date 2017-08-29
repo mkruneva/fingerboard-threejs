@@ -29,6 +29,19 @@ function init() {
     // const context = canvas.getContext('2d');
     // console.log(context);
 
+    var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
+    var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+    var sprite = new THREE.Sprite(spriteMaterial);
+    sprite.position.set(-176, 66, 50);
+    sprite.scale.set(50, 50, 1);
+    scene.add(sprite);
+
+    //SPTITE GUI
+    var gui = new dat.GUI();
+    var spriteGui = gui.addFolder('Camera');
+    spriteGui.add(sprite.position, 'x', -500, 500);
+    spriteGui.add(sprite.position, 'y', -500, 500);
+    spriteGui.add(sprite.position, 'z', -500, 500);
 
     //MATERIALS
     var backgroundMat = createBackgroundMaterial();
@@ -149,6 +162,7 @@ function loadObject(objpath, material) {
             object.rotation.set(0, 0, 0);
             object.position.set(0, -90, 0);
             scene.add(object);
+            console.log(object);
         }
     );
 }
