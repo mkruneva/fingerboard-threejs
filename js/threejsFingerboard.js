@@ -2,7 +2,9 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
+scene.add(camera);
 camera.position.set(0, 0, 700);
+
 
 //RENDER
 renderer = createRenderer(0x222222);
@@ -47,7 +49,7 @@ nrmTex.wrapT = THREE.RepeatWrapping;
 nrmTex.repeat.set(3, 3);
 var roughtTex = new THREE.TextureLoader().load("tex/beech_wood_rough.png");
 
-var material2 = new THREE.MeshStandardMaterial({
+var fingerboardMat = new THREE.MeshStandardMaterial({
     aoMap: aoTex,
     color: 0xbbbbbb,
     envMap: envMap,
@@ -57,6 +59,12 @@ var material2 = new THREE.MeshStandardMaterial({
     roughness: 0.96,
     roughnessMap: roughtTex
 });
+
+var backgroundTex = new THREE.TextureLoader().load("tex/background.jpg");
+backgroundTex.wrapS = THREE.RepeatWrapping;
+backgroundTex.wrapT = THREE.RepeatWrapping;
+backgroundTex.repeat.set(3, 3);
+var backgroundMat = new THREE.MeshBasicMaterial( {color: 0xAAAAAA, map: backgroundTex });
 
 //LIGHTS
 var ambLight = new THREE.AmbientLight(0x404040); // soft white light
@@ -80,7 +88,12 @@ scene.add(spotLight2);
 var hemLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.6);
 scene.add(hemLight);
 
+//Geo 
 
+var geometry = new THREE.PlaneGeometry( 3000, 3000 );
+var plane = new THREE.Mesh( geometry, backgroundMat );
+plane.position.set( 0, 0, -1000 );
+camera.add( plane );
 
 
 // load a resource
@@ -92,7 +105,7 @@ loader.load(
     function(object) {
         object.traverse(function(child) {
             if (child instanceof THREE.Mesh) {
-                child.material = material2;
+                child.material = fingerboardMat;
             }
         });
         object.rotation.set(0, 0, 0);
@@ -110,6 +123,10 @@ var cam = gui.addFolder('Camera');
 cam.add(camera.position, 'x', -100, 150);
 cam.add(camera.position, 'y', -100, 150);
 cam.add(camera.position, 'z', 0, 1500);
+var planegui = gui.addFolder('plane');
+planegui.add(plane.position, 'x', -1000, 1000);
+planegui.add(plane.position, 'y', -1000, 1000);
+planegui.add(plane.position, 'z', -1000, 1000);
 // var sportlightGui = gui.addFolder('spot light');
 // sportlightGui.add(spotLight.position, 'x', -500, 500);
 // sportlightGui.add(spotLight.position, 'y', 0, 2000);
