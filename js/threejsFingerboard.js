@@ -58,12 +58,12 @@ var ambLight = new THREE.AmbientLight(0x404040); // soft white light
 ambLight.intensity = 5;
 scene.add(ambLight);
 
-// var dirLight = new THREE.DirectionalLight( 0xFFFFFF );
-// dirLight.rotation.set( 1, 0, 0 );
-// dirLight.position.set( -200, 300, -100 );
-// var helper = new THREE.DirectionalLightHelper( dirLight, 0.5 );
-// scene.add( dirLight );
-// scene.add( helper );
+var spotLight = new THREE.SpotLight( 0xffffff );
+spotLight.position.set( 100, 1000, 100 );
+scene.add(spotLight);
+
+var spotLightHelper = new THREE.SpotLightHelper( spotLight );
+scene.add( spotLightHelper );
 
 var hemLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 scene.add(hemLight);
