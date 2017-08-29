@@ -1,7 +1,7 @@
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000);  //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
+var camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
 camera.position.set(0, 0, 700);
 
 //RENDER
@@ -22,7 +22,18 @@ var envMap = new THREE.CubeTextureLoader()
         'negz.jpg',
     ]);
 
-//scene.background = envMap;
+// var backgroundMap = new THREE.CubeTextureLoader()
+//     .setPath('tex/cubemap2/')
+//     .load([
+//         'posx.jpg',
+//         'negx.jpg',
+//         'posy.jpg',
+//         'negy.jpg',
+//         'posz.jpg',
+//         'negz.jpg',
+//     ]);
+
+// scene.background = backgroundMap;
 
 //TEX AND MAT
 var diffTex = new THREE.TextureLoader().load("tex/beech_wood_albedo.jpg");
@@ -36,32 +47,31 @@ nrmTex.wrapT = THREE.RepeatWrapping;
 nrmTex.repeat.set(3, 3);
 var roughtTex = new THREE.TextureLoader().load("tex/beech_wood_rough.png");
 
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-var material2 = new THREE.MeshStandardMaterial({ aoMap: aoTex, 
-                                                color: 0xbbbbbb, 
-                                                envMap: envMap, 
-                                                map: diffTex, 
-                                                normalMap: nrmTex, 
-                                                normalScale: new THREE.Vector3( 0.3, 0.3 ), 
-                                                roughness: 0.96,
-                                                roughnessMap: roughtTex
-                 });
+var material2 = new THREE.MeshStandardMaterial({
+    aoMap: aoTex,
+    color: 0xbbbbbb,
+    envMap: envMap,
+    map: diffTex,
+    normalMap: nrmTex,
+    normalScale: new THREE.Vector3(0.3, 0.3),
+    roughness: 0.96,
+    roughnessMap: roughtTex
+});
 
 //LIGHTS
 var ambLight = new THREE.AmbientLight(0x404040); // soft white light
 ambLight.intensity = 2;
 scene.add(ambLight);
 
-var spotLight = new THREE.SpotLight( 0xffffff );
-spotLight.position.set( 0, 100, 600 );
-spotLight.rotation.set( (45*Math.PI/180), 0, 0 );
+var spotLight = new THREE.SpotLight(0xffffff);
+spotLight.position.set(0, 100, 600);
+spotLight.rotation.set((45 * Math.PI / 180), 0, 0);
 spotLight.intensity = 0.7;
 scene.add(spotLight);
 
-var spotLight2 = new THREE.SpotLight( 0xffffff );
-spotLight2.position.set( 0, 100, -600 );
-spotLight2.rotation.set( (45*Math.PI/180), 0, 0 );
+var spotLight2 = new THREE.SpotLight(0xffffff);
+spotLight2.position.set(0, 100, -600);
+spotLight2.rotation.set((45 * Math.PI / 180), 0, 0);
 spotLight2.intensity = 0.7;
 scene.add(spotLight2);
 // var spotLightHelper = new THREE.SpotLightHelper( spotLight2 );
@@ -69,6 +79,9 @@ scene.add(spotLight2);
 
 var hemLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.6);
 scene.add(hemLight);
+
+
+
 
 // load a resource
 var loader = new THREE.OBJLoader();
@@ -83,7 +96,7 @@ loader.load(
             }
         });
         object.rotation.set(0, 0, 0);
-        object.position.set(0, -100, 0);
+        object.position.set(0, -90, 0);
         scene.add(object);
     }
 );
