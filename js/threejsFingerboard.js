@@ -102,31 +102,12 @@ function init() {
     //     ctx.stroke();
     // }
 
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    console.log(context);
-    const x = 32;
-    const y = 32;
-    const radius = 60;
-    const startAngle = 0;
-    const endAngle = Math.PI * 2;
+    // const canvas = document.createElement('canvas');
+    // const context = canvas.getContext('2d');
+    // console.log(context);
 
-    context.fillStyle = "rgb(110, 110, 110)";
-    context.beginPath();
-    context.arc(x, y, radius, startAngle, endAngle);
-    context.fill();
 
-    context.strokeStyle = "rgb(255, 255, 255)";
-    context.lineWidth = 3;
-    context.beginPath();
-    context.arc(x, y, radius, startAngle, endAngle);
-    context.stroke();
 
-    context.fillStyle = "rgb(255, 255, 255)";
-    context.font = "32px sans-serif";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillText("1", x, y);
 
 
     //MATERIALS
@@ -140,7 +121,7 @@ function init() {
     createBackgroundPlane(backgroundMat);
 
     //LOAD FINGERBOARD
-    loadObject ('obj/fingerboard-obj.obj', fingerboardMat);
+    //loadObject('obj/fingerboard-obj.obj', fingerboardMat);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -154,6 +135,12 @@ function init() {
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
     };
+
+    var spriteMap = new THREE.TextureLoader().load("tex/cubemap/negx.jpg");
+    var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+    var sprite = new THREE.Sprite(spriteMaterial);
+    scene.add(sprite);
+
 }
 
 //FUNCTIONS
@@ -175,16 +162,16 @@ function loadTextures() {
     repeatTex(maps.diffTex, 3);
     repeatTex(maps.nrmTex, 3);
     repeatTex(maps.backgroundTex, 3);
-    maps.envCubeMap =  new THREE.CubeTextureLoader()
-                            .setPath('tex/cubemap/')
-                            .load([
-                                'posx.jpg',
-                                'negx.jpg',
-                                'posy.jpg',
-                                'negy.jpg',
-                                'posz.jpg',
-                                'negz.jpg',
-                            ]);
+    maps.envCubeMap = new THREE.CubeTextureLoader()
+        .setPath('tex/cubemap/')
+        .load([
+            'posx.jpg',
+            'negx.jpg',
+            'posy.jpg',
+            'negy.jpg',
+            'posz.jpg',
+            'negz.jpg',
+        ]);
     return maps;
 }
 
@@ -242,10 +229,10 @@ function createLights() {
     scene.add(hemLight);
 }
 
-function loadObject (objpath, material) {
+function loadObject(objpath, material) {
     createFingerBoardMaterial();
     var loader = new THREE.OBJLoader();
-    loader.load(objpath, 
+    loader.load(objpath,
         function(object) {
             object.traverse(function(child) {
                 if (child instanceof THREE.Mesh) {
@@ -269,9 +256,9 @@ function createGUI() {
     sportlightGui.add(spotLight.position, 'x', -500, 500);
     sportlightGui.add(spotLight.position, 'y', 0, 2000);
     sportlightGui.add(spotLight.position, 'z', -500, 500);
-    sportlightGui.add(spotLight.rotation, 'x', 0, 2*Math.PI);
-    sportlightGui.add(spotLight.rotation, 'y', 0, 2*Math.PI);
-    sportlightGui.add(spotLight.rotation, 'z', 0, 2*Math.PI);
+    sportlightGui.add(spotLight.rotation, 'x', 0, 2 * Math.PI);
+    sportlightGui.add(spotLight.rotation, 'y', 0, 2 * Math.PI);
+    sportlightGui.add(spotLight.rotation, 'z', 0, 2 * Math.PI);
 }
 
 //FUNCTION FOR CREATING RENDERER
