@@ -5,7 +5,7 @@ body {
 #canvasContainer {
     position: relative;
     width: 100%;
-    padding-top: 75%;
+    padding-top: 60%;
 }
 
 #canvasContainer>canvas {

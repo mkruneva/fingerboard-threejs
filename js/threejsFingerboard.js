@@ -1,8 +1,8 @@
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 2000);
-camera.position.set(-4.5, -47, 491);
+var camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000);  //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
+camera.position.set(0, 0, 700);
 
 //RENDER
 renderer = createRenderer(0x222222);
@@ -94,7 +94,9 @@ loader.load(
 //GUI 
 var gui = new dat.GUI();
 var cam = gui.addFolder('Camera');
-cam.add(camera.position, 'x', -500, 500);
+cam.add(camera.position, 'x', -100, 150);
+cam.add(camera.position, 'y', -100, 150);
+cam.add(camera.position, 'z', 0, 1500);
 // var sportlightGui = gui.addFolder('spot light');
 // sportlightGui.add(spotLight.position, 'x', -500, 500);
 // sportlightGui.add(spotLight.position, 'y', 0, 2000);
