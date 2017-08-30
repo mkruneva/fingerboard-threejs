@@ -33,7 +33,7 @@ function init() {
     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
     var sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.set(-176, 66, 50);
-    sprite.scale.set(50, 50, 1);
+    sprite.scale.set(15, 15, 1);
     scene.add(sprite);
 
     //SPTITE GUI
@@ -215,17 +215,17 @@ function updateAnnotationOpacity() {
 }
 
 function updateScreenPosition() {
-    const vector = new THREE.Vector3(250, 250, 250);
+    const vector = new THREE.Vector3(-176, 66, 50);
     const canvas = renderer.domElement;
 
     vector.project(camera);
 
-    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
+    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio)) + 15;
+    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio)) + 15;
 
     annotation.style.top = `${vector.y}px`;
     annotation.style.left = `${vector.x}px`;
-    annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
+    //annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
 }
 
 function animate() {
@@ -237,5 +237,5 @@ function animate() {
 function render() {
     renderer.render(scene, camera);
     //updateAnnotationOpacity();
-    //updateScreenPosition();
+    updateScreenPosition();
 }
