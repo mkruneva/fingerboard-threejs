@@ -36,12 +36,12 @@ function init() {
     sprite.scale.set(15, 15, 1);
     scene.add(sprite);
 
-    //SPTITE GUI
-    var gui = new dat.GUI();
-    var spriteGui = gui.addFolder('Camera');
-    spriteGui.add(sprite.position, 'x', -500, 500);
-    spriteGui.add(sprite.position, 'y', -500, 500);
-    spriteGui.add(sprite.position, 'z', -500, 500);
+    // //SPTITE GUI
+    // var gui = new dat.GUI();
+    // var spriteGui = gui.addFolder('Camera');
+    // spriteGui.add(sprite.position, 'x', -500, 500);
+    // spriteGui.add(sprite.position, 'y', -500, 500);
+    // spriteGui.add(sprite.position, 'z', -500, 500);
 
     //MATERIALS
     var backgroundMat = createBackgroundMaterial();
@@ -52,6 +52,10 @@ function init() {
 
     //CREATE BACKGROUND PLANE 
     createBackgroundPlane(backgroundMat);
+
+    //INVISIBLE CUBE
+    var invisibleCube = createInvisibleBox(622, 154, 64);
+    console.log(invisibleCube);
 
     //LOAD FINGERBOARD
     loadObject('obj/fingerboard-obj.obj', fingerboardMat);
@@ -125,6 +129,16 @@ function createBackgroundPlane(material) {
     camera.add(plane);
 
     return plane;
+}
+
+function createInvisibleBox(width, height, depth) {
+    var geometry = new THREE.CubeGeometry(width, height, depth);
+    var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
+    var cube = new THREE.Mesh(geometry, material);
+    cube.position.set(0, -14, 31);
+    scene.add(cube);
+
+    return cube;
 }
 
 //Function LIGHTS
@@ -204,14 +218,15 @@ function createRenderer(clearColour) {
 }
 
 function updateAnnotationOpacity() {
-    const meshDistance = camera.position.distanceTo(mesh.position);
-    const spriteDistance = camera.position.distanceTo(sprite.position);
-    spriteBehindObject = spriteDistance > meshDistance;
-    sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
+    //console.log(invisibleCube);
+    // const meshDistance = camera.position.distanceTo(invisibleCube.position);
+    // const spriteDistance = camera.position.distanceTo(sprite.position);
+    // spriteBehindObject = spriteDistance > meshDistance;
+    // sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
 
     // Do you want a number that changes size according to its position?
     // Comment out the following line and the `::before` pseudo-element.
-    sprite.material.opacity = 0;
+    //sprite.material.opacity = 0;
 }
 
 function updateScreenPosition() {
@@ -220,8 +235,8 @@ function updateScreenPosition() {
 
     vector.project(camera);
 
-    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio)) + 15;
-    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio)) + 15;
+    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
+    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio)); //to be changed
 
     annotation.style.top = `${vector.y}px`;
     annotation.style.left = `${vector.x}px`;
@@ -236,6 +251,6 @@ function animate() {
 
 function render() {
     renderer.render(scene, camera);
-    //updateAnnotationOpacity();
+    updateAnnotationOpacity();
     updateScreenPosition();
 }
