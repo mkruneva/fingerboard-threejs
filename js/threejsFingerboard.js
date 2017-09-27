@@ -31,8 +31,9 @@ function init() {
     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
     var sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.set(-176, 66, 50);
-    sprite.scale.set(15, 15, 1);
+    sprite.scale.set(20, 20, 1);
     scene.add(sprite);
+    //console.log("sprite is ", sprite);
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -53,8 +54,6 @@ function init() {
 
     //INVISIBLE CUBE
     var invisibleCube = createInvisibleBox(622, 154, 64);
-    //invisibleCube.visible = false; //hiding the Cube
-    // console.log("cube is", invisibleCube);
 
     //LOAD FINGERBOARD
     loadObject('obj/fingerboard-obj.obj', fingerboardMat);
@@ -135,6 +134,7 @@ function createInvisibleBox(width, height, depth) {
     var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
     var cube = new THREE.Mesh(geometry, material);
     cube.position.set(0, -14, 31);
+    cube.visible = false; //hiding the Cube
     scene.add(cube);
 
     return cube;
@@ -217,8 +217,15 @@ function createRenderer(clearColour) {
 }
 
 function updateAnnotationOpacity() {
-    //console.log(sprite);
-    //console.log(invisibleCube);
+
+    //WORKAROUND - invisibleCube and Sprite - not defined 
+    var sprite = scene.children[1];
+    var invCube = scene.children[6];
+    const meshDistance = camera.position.distanceTo(invCube.position);
+    const spriteDistance = camera.position.distanceTo(sprite.position);
+    spriteBehindObject = spriteDistance > meshDistance;
+    sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
+
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
     // spriteBehindObject = spriteDistance > meshDistance;
@@ -226,7 +233,7 @@ function updateAnnotationOpacity() {
 
     // Do you want a number that changes size according to its position?
     // Comment out the following line and the `::before` pseudo-element.
-    //sprite.material.opacity = 0;
+    // sprite.material.opacity = 0;
 }
 
 function updateScreenPosition() {
@@ -239,7 +246,7 @@ function updateScreenPosition() {
 
     annotation.style.top = `${vector.y}px`;
     annotation.style.left = `${vector.x}px`;
-    //annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
+    annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
 }
 
 function animate() {
