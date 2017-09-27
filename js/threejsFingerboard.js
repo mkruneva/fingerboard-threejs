@@ -217,6 +217,7 @@ function createRenderer(clearColour) {
 }
 
 function updateAnnotationOpacity() {
+    //console.log(sprite);
     //console.log(invisibleCube);
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
@@ -233,9 +234,8 @@ function updateScreenPosition() {
     const canvas = renderer.domElement;
 
     vector.project(camera);
-
-    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio)); //to be changed
+    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
+    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
 
     annotation.style.top = `${vector.y}px`;
     annotation.style.left = `${vector.x}px`;
