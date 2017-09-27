@@ -17,12 +17,10 @@ function init() {
     scene.add(camera);
     camera.position.set(0, 0, 750);
 
-
     //RENDER
     renderer = createRenderer(0x222222);
     var parent = document.getElementById('canvasContainer');
     parent.appendChild(renderer.domElement);
-
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
@@ -55,7 +53,8 @@ function init() {
 
     //INVISIBLE CUBE
     var invisibleCube = createInvisibleBox(622, 154, 64);
-    console.log(invisibleCube);
+    //invisibleCube.visible = false; //hiding the Cube
+    // console.log("cube is", invisibleCube);
 
     //LOAD FINGERBOARD
     loadObject('obj/fingerboard-obj.obj', fingerboardMat);
@@ -176,7 +175,7 @@ function loadObject(objpath, material) {
             object.rotation.set(0, 0, 0);
             object.position.set(0, -90, 0);
             scene.add(object);
-            console.log(object);
+            //console.log("fingerboard is ",  object);
         }
     );
 }
