@@ -219,6 +219,7 @@ function createRenderer(clearColour) {
 function updateAnnotationOpacity() {
 
     //WORKAROUND - invisibleCube and Sprite - not defined 
+    console.log(scene.children);
     var sprite = scene.children[1];
     var invCube = scene.children[6];
     const meshDistance = camera.position.distanceTo(invCube.position);
