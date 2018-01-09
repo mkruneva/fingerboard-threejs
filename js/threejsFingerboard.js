@@ -27,20 +27,24 @@ function init() {
     // const context = canvas.getContext('2d');
     // console.log(context);
 
-    var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
-    var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
-    var sprite = new THREE.Sprite(spriteMaterial);
-    sprite.position.set(-176, 66, 50);
-    sprite.scale.set(20, 20, 1);
-    scene.add(sprite);
+    // 30* sloper annotation 
+    // var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
+    // var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+    // var sprite = new THREE.Sprite(spriteMaterial);
+    // sprite.position.set(-176, 66, 50);
+    // sprite.scale.set(20, 20, 1);
+    // scene.add(sprite);
     //console.log("sprite is ", sprite);
+
+    createSprite(-176, 66, 50); //sloper 30 degrees
+    createSprite(-87, 66, 50); //sloper 20 degrees
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
-    // var spriteGui = gui.addFolder('Camera');
-    // spriteGui.add(sprite.position, 'x', -500, 500);
-    // spriteGui.add(sprite.position, 'y', -500, 500);
-    // spriteGui.add(sprite.position, 'z', -500, 500);
+    // var spriteGui = gui.addFolder('Sprite position');
+    // spriteGui.add(sprite_20deg.position, 'x', -500, 500);
+    // spriteGui.add(sprite_20deg.position, 'y', -500, 500);
+    // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
 
     //MATERIALS
     var backgroundMat = createBackgroundMaterial();
@@ -66,6 +70,18 @@ function init() {
 }
 
 //FUNCTIONS
+
+//Annotations and Sprites 
+function createSprite(x, y, z, scale) {
+    var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
+    var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+    var sprite = new THREE.Sprite(spriteMaterial);
+    sprite.position.set(x, y, z);
+    sprite.scale.set(20, 20, 1);
+    scene.add(sprite);
+
+    return sprite;
+}
 //Materials and Textures
 function repeatTex(mapName, repeat) {
     mapName.wrapS = THREE.RepeatWrapping;
