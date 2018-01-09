@@ -7,6 +7,7 @@ let renderer;
 let sprite;
 let spriteBehindObject;
 const annotation = document.querySelector(".annotation");
+const annotation2 = document.querySelector(".sloper20");
 
 init();
 animate();
@@ -254,7 +255,7 @@ function updateAnnotationOpacity() {
 }
 
 function updateScreenPosition() {
-    const vector = new THREE.Vector3(-176, 66, 50);
+    const vector = new THREE.Vector3(-176, 66, 50); // sprite position
     const canvas = renderer.domElement;
 
     vector.project(camera);
@@ -264,6 +265,15 @@ function updateScreenPosition() {
     annotation.style.top = `${vector.y}px`;
     annotation.style.left = `${vector.x}px`;
     annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
+
+    const vector2 = new THREE.Vector3(-87, 66, 50); // sprite position 
+    vector2.project(camera);
+    vector2.x = Math.round((0.5 + vector2.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
+    vector2.y = Math.round((0.5 - vector2.y / 2) * (canvas.clientHeight / window.devicePixelRatio));
+
+    annotation2.style.top = `${vector2.y}px`;
+    annotation2.style.left = `${vector2.x}px`;
+    annotation2.style.opacity = spriteBehindObject ? 0.25 : 1;
 }
 
 function animate() {
