@@ -6,7 +6,7 @@ let scene;
 let renderer;
 let sprite;
 let spriteBehindObject;
-const annotation = document.querySelector(".annotation");
+const annotation = document.querySelector(".sloper30");
 const annotation2 = document.querySelector(".sloper20");
 
 init();
@@ -16,7 +16,7 @@ function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
     scene.add(camera);
-    camera.position.set(0, 0, 750);
+    camera.position.set(-50, 0, 750);
 
     //RENDER
     renderer = createRenderer(0x222222);
@@ -26,19 +26,9 @@ function init() {
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
-    // console.log(context);
 
-    // 30* sloper annotation 
-    // var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
-    // var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
-    // var sprite = new THREE.Sprite(spriteMaterial);
-    // sprite.position.set(-176, 66, 50);
-    // sprite.scale.set(20, 20, 1);
-    // scene.add(sprite);
-    //console.log("sprite is ", sprite);
-
-    createSprite(-176, 66, 50); //sloper 30 degrees
-    createSprite(-87, 66, 50); //sloper 20 degrees
+    createSprite(-176, 66, 50, "tex/annotations/1.png"); //sloper 30 degrees
+    createSprite(-87, 66, 50, "tex/annotations/1.png"); //sloper 20 degrees
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -54,7 +44,7 @@ function init() {
     //LIGHTS
     createLights();
 
-    //CREATE BACKGROUND PLANE 
+    // CREATE BACKGROUND PLANE 
     createBackgroundPlane(backgroundMat);
 
     //INVISIBLE CUBE
@@ -70,11 +60,11 @@ function init() {
     loadingScreen();
 }
 
-//FUNCTIONS
+// FUNCTIONS
 
-//Annotations and Sprites 
-function createSprite(x, y, z, scale) {
-    var spriteMap = new THREE.TextureLoader().load("tex/annotations/1.png");
+// Annotations and Sprites 
+function createSprite(x, y, z, tex, scale) {
+    var spriteMap = new THREE.TextureLoader().load(tex);
     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
     var sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.set(x, y, z);
@@ -83,6 +73,7 @@ function createSprite(x, y, z, scale) {
 
     return sprite;
 }
+
 //Materials and Textures
 function repeatTex(mapName, repeat) {
     mapName.wrapS = THREE.RepeatWrapping;
@@ -150,7 +141,7 @@ function createInvisibleBox(width, height, depth) {
     var geometry = new THREE.CubeGeometry(width, height, depth);
     var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
     var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, -14, 31);
+    cube.position.set(0, 26, 31);
     cube.visible = false; //hiding the Cube
     scene.add(cube);
 
@@ -190,7 +181,7 @@ function loadObject(objpath, material) {
                 }
             });
             object.rotation.set(0, 0, 0);
-            object.position.set(0, -90, 0);
+            object.position.set(0, -50, 0);
             scene.add(object);
             //console.log("fingerboard is ",  object);
         }
@@ -235,8 +226,8 @@ function createRenderer(clearColour) {
 
 function updateAnnotationOpacity() {
 
-    //WORKAROUND - invisibleCube and Sprite - not defined 
-    //console.log(scene.children);
+    // WORKAROUND - invisibleCube and Sprite - not defined 
+    // console.log(scene.children);
     var sprite = scene.children[1];
     var invCube = scene.children[6];
     const meshDistance = camera.position.distanceTo(invCube.position);
