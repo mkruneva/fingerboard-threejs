@@ -10,6 +10,9 @@ let spriteBehindObject;
 init();
 animate();
 
+const annDiv = document.getElementById('ann');
+annDiv.style.display = 'none';
+
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
@@ -28,8 +31,8 @@ function init() {
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
-    createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
+    const spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
+    const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -70,6 +73,7 @@ function createSprite(x, y, z, tex, scale, parent) {
     var sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.set(x, y, z);
     sprite.scale.set(20, 20, 1);
+    sprite.visible = false;
     parent.add(sprite);
 
     return sprite;
@@ -214,12 +218,17 @@ function createGUI() {
 }
 
 function loadingScreen() {
-    var loaderDiv = document.getElementById('loader');
+    const loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
         loaderDiv.style.display = 'block';
     };
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
+        annDiv.style.display = 'block';
+        const sprite1 = scene.children[1].children[0];
+        const sprite2 = scene.children[1].children[1];
+        sprite1.visible = true;
+        sprite2.visible = true;
     };
 }
 
@@ -237,7 +246,6 @@ function createRenderer(clearColour) {
 function updateAnnotationOpacity() {
 
         // WORKAROUND - invisibleCube and Sprite - not defined 
-        // currenly works for sprite 1 only
         const sprite1 = scene.children[1].children[0];
         const sprite2 = scene.children[1].children[1];
         const invCube = scene.children[1].children[2];
