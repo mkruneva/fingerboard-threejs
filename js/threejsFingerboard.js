@@ -247,15 +247,15 @@ function updateAnnotationOpacity() {
 
         // WORKAROUND - invisibleCube and Sprite - not defined 
         const sprite1 = scene.children[1].children[0];
-        const sprite2 = scene.children[1].children[1];
+        // const sprite2 = scene.children[1].children[1];
         const invCube = scene.children[1].children[2];
         const meshDistance = camera.position.distanceTo(invCube.position);
-        const spriteDistance1 = camera.position.distanceTo(sprite1.position);
-        const spriteDistance2 = camera.position.distanceTo(sprite1.position);
-        spriteBehindObject1 = spriteDistance1 > meshDistance;
-        spriteBehindObject2 = spriteDistance2 > meshDistance;
-        sprite1.material.opacity = spriteBehindObject1 ? 0.25 : 1;
-        sprite2.material.opacity = spriteBehindObject2 ? 0.25 : 1;
+        const spriteDistance = camera.position.distanceTo(sprite1.position);
+        // const spriteDistance2 = camera.position.distanceTo(sprite2.position);
+        spriteBehindObject = spriteDistance > meshDistance;
+        // spriteBehindObject2 = spriteDistance2 > meshDistance;
+        sprite1.material.opacity = spriteBehindObject ? 0.25 : 1;
+        // sprite2.material.opacity = spriteBehindObject2 ? 0.25 : 1;
 
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
