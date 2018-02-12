@@ -6,8 +6,8 @@ let scene;
 let renderer;
 let sprite;
 let spriteBehindObject;
-const annotation = document.querySelector(".sloper30");
-const annotation2 = document.querySelector(".sloper20");
+const annotation = document.querySelector('.sloper30');
+const annotation2 = document.querySelector('.sloper20');
 
 init();
 animate();
@@ -20,15 +20,18 @@ function init() {
 
     //RENDER
     renderer = createRenderer(0x222222);
-    var parent = document.getElementById('canvasContainer');
+    const parent = document.getElementById('canvasContainer');
     parent.appendChild(renderer.domElement);
+
+    // Empty Group
+    const FBgroup = createFBgroup(0, -75, 0);
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    createSprite(-176, 66, 50, "tex/annotations/1.png"); //sloper 30 degrees
-    createSprite(-87, 66, 50, "tex/annotations/1.png"); //sloper 20 degrees
+    createSprite(-176, 106, 50, 'tex/annotations/1.png'); //sloper 30 degrees
+    createSprite(-87, 106, 50, 'tex/annotations/1.png'); //sloper 20 degrees
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -38,8 +41,8 @@ function init() {
     // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
 
     //MATERIALS
-    var backgroundMat = createBackgroundMaterial();
-    var fingerboardMat = createFingerBoardMaterial();
+    const backgroundMat = createBackgroundMaterial();
+    const fingerboardMat = createFingerBoardMaterial();
 
     //LIGHTS
     createLights();
@@ -47,11 +50,11 @@ function init() {
     // CREATE BACKGROUND PLANE 
     createBackgroundPlane(backgroundMat);
 
-    //INVISIBLE CUBE
-    var invisibleCube = createInvisibleBox(622, 154, 64);
-
     //LOAD FINGERBOARD
-    loadObject('obj/fingerboard-obj.obj', fingerboardMat);
+    const fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
+
+    //INVISIBLE CUBE
+    const invisibleCube = createInvisibleBox(622, 154, 64, FBgroup);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -83,11 +86,11 @@ function repeatTex(mapName, repeat) {
 
 function loadTextures() {
     var maps = {
-        diffTex: new THREE.TextureLoader().load("tex/beech_wood_albedo.jpg"),
-        aoTex: new THREE.TextureLoader().load("tex/beech_wood_ao.png"),
-        nrmTex: new THREE.TextureLoader().load("tex/beech_wood_anormal.png"),
-        roughtTex: new THREE.TextureLoader().load("tex/beech_wood_rough.png"),
-        backgroundTex: new THREE.TextureLoader().load("tex/background.jpg"),
+        diffTex: new THREE.TextureLoader().load('tex/beech_wood_albedo.jpg'),
+        aoTex: new THREE.TextureLoader().load('tex/beech_wood_ao.png'),
+        nrmTex: new THREE.TextureLoader().load('tex/beech_wood_anormal.png'),
+        roughtTex: new THREE.TextureLoader().load('tex/beech_wood_rough.png'),
+        backgroundTex: new THREE.TextureLoader().load('tex/background.jpg'),
     }
     repeatTex(maps.diffTex, 3);
     repeatTex(maps.nrmTex, 3);
@@ -137,13 +140,23 @@ function createBackgroundPlane(material) {
     return plane;
 }
 
-function createInvisibleBox(width, height, depth) {
+function createFBgroup(x, y, z) {
+    const fbgroup = new THREE.Object3D;
+    fbgroup.name = 'fingerboard group';
+    fbgroup.position.set(x, y, z);
+    fbgroup.rotation.set(0, 0, 0);
+    scene.add( fbgroup );
+
+    return fbgroup;
+}
+
+function createInvisibleBox(width, height, depth, parent) {
     var geometry = new THREE.CubeGeometry(width, height, depth);
     var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
     var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 26, 31);
+    cube.position.set(0, 76, 31);
     cube.visible = false; //hiding the Cube
-    scene.add(cube);
+    parent.add(cube);
 
     return cube;
 }
@@ -170,23 +183,23 @@ function createLights() {
     scene.add(hemLight);
 }
 
-function loadObject(objpath, material) {
+function loadObject(objpath, material, parent) {
     createFingerBoardMaterial();
     var loader = new THREE.OBJLoader();
     loader.load(objpath,
         function(object) {
+            object.name = 'fingerboard';
             object.traverse(function(child) {
                 if (child instanceof THREE.Mesh) {
                     child.material = material;
                 }
             });
-            object.rotation.set(0, 0, 0);
-            object.position.set(0, -50, 0);
-            scene.add(object);
-            //console.log("fingerboard is ",  object);
+            parent.add(object);
+            // console.log('fingerboard is ',  object);
         }
     );
 }
+
 
 function createGUI() {
     var gui = new dat.GUI();
@@ -204,7 +217,7 @@ function createGUI() {
 }
 
 function loadingScreen() {
-    var loaderDiv = document.getElementById("loader");
+    var loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
         loaderDiv.style.display = 'block';
     };
@@ -226,27 +239,25 @@ function createRenderer(clearColour) {
 
 function updateAnnotationOpacity() {
 
-    // WORKAROUND - invisibleCube and Sprite - not defined 
-    // console.log(scene.children);
-    var sprite = scene.children[1];
-    var invCube = scene.children[6];
-    const meshDistance = camera.position.distanceTo(invCube.position);
-    const spriteDistance = camera.position.distanceTo(sprite.position);
-    spriteBehindObject = spriteDistance > meshDistance;
-    sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
+    if (scene.children[2] && scene.children[1]) {
+        // WORKAROUND - invisibleCube and Sprite - not defined 
+        // currenly works for sprite 1 only
+        var sprite = scene.children[2];
+        var invCube = scene.children[1].children[0];
+        const meshDistance = camera.position.distanceTo(invCube.position);
+        const spriteDistance = camera.position.distanceTo(sprite.position);
+        spriteBehindObject = spriteDistance > meshDistance;
+        sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
+    }
 
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
     // spriteBehindObject = spriteDistance > meshDistance;
     // sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
-
-    // Do you want a number that changes size according to its position?
-    // Comment out the following line and the `::before` pseudo-element.
-    // sprite.material.opacity = 0;
 }
 
 function updateScreenPosition() {
-    const vector = new THREE.Vector3(-176, 66, 50); // sprite position
+    const vector = new THREE.Vector3(-176, 106, 50); // sprite position
     const canvas = renderer.domElement;
 
     vector.project(camera);
@@ -257,7 +268,7 @@ function updateScreenPosition() {
     annotation.style.left = `${vector.x}px`;
     annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
 
-    const vector2 = new THREE.Vector3(-87, 66, 50); // sprite position 
+    const vector2 = new THREE.Vector3(-87, 106, 50); // sprite position 
     vector2.project(camera);
     vector2.x = Math.round((0.5 + vector2.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
     vector2.y = Math.round((0.5 - vector2.y / 2) * (canvas.clientHeight / window.devicePixelRatio));
