@@ -6,8 +6,6 @@ let scene;
 let renderer;
 let sprite;
 let spriteBehindObject;
-const annotation = document.querySelector('.sloper30');
-const annotation2 = document.querySelector('.sloper20');
 
 init();
 animate();
@@ -30,8 +28,8 @@ function init() {
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    createSprite(-176, 106, 50, 'tex/annotations/1.png'); //sloper 30 degrees
-    createSprite(-87, 106, 50, 'tex/annotations/1.png'); //sloper 20 degrees
+    createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
+    createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -66,13 +64,13 @@ function init() {
 // FUNCTIONS
 
 // Annotations and Sprites 
-function createSprite(x, y, z, tex, scale) {
+function createSprite(x, y, z, tex, scale, parent) {
     var spriteMap = new THREE.TextureLoader().load(tex);
     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
     var sprite = new THREE.Sprite(spriteMaterial);
     sprite.position.set(x, y, z);
     sprite.scale.set(20, 20, 1);
-    scene.add(sprite);
+    parent.add(sprite);
 
     return sprite;
 }
@@ -195,7 +193,6 @@ function loadObject(objpath, material, parent) {
                 }
             });
             parent.add(object);
-            // console.log('fingerboard is ',  object);
         }
     );
 }
@@ -239,44 +236,47 @@ function createRenderer(clearColour) {
 
 function updateAnnotationOpacity() {
 
-    if (scene.children[2] && scene.children[1]) {
         // WORKAROUND - invisibleCube and Sprite - not defined 
         // currenly works for sprite 1 only
-        var sprite = scene.children[2];
-        var invCube = scene.children[1].children[0];
+        const sprite1 = scene.children[1].children[0];
+        const sprite2 = scene.children[1].children[1];
+        const invCube = scene.children[1].children[2];
         const meshDistance = camera.position.distanceTo(invCube.position);
-        const spriteDistance = camera.position.distanceTo(sprite.position);
-        spriteBehindObject = spriteDistance > meshDistance;
-        sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
-    }
+        const spriteDistance1 = camera.position.distanceTo(sprite1.position);
+        const spriteDistance2 = camera.position.distanceTo(sprite1.position);
+        spriteBehindObject1 = spriteDistance1 > meshDistance;
+        spriteBehindObject2 = spriteDistance2 > meshDistance;
+        sprite1.material.opacity = spriteBehindObject1 ? 0.25 : 1;
+        sprite2.material.opacity = spriteBehindObject2 ? 0.25 : 1;
 
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
-    // spriteBehindObject = spriteDistance > meshDistance;
-    // sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
 }
+
+
 
 function updateScreenPosition() {
-    const vector = new THREE.Vector3(-176, 106, 50); // sprite position
-    const canvas = renderer.domElement;
+    const annPos = [[-176, 81, 50],[-87, 81, 50]];
+    const selectors = ['.sloper30','.sloper20']
+    let ann = [];
 
-    vector.project(camera);
-    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
-    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
+    for (let i = 0; i < annPos.length; i++) {
+        const pos = annPos[i];
+        const vec = new THREE.Vector3(pos[0], pos[1], pos[2]);
+        const canvas = renderer.domElement;
 
-    annotation.style.top = `${vector.y}px`;
-    annotation.style.left = `${vector.x}px`;
-    annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
+        vec.project(camera);
+        vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
+        vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
 
-    const vector2 = new THREE.Vector3(-87, 106, 50); // sprite position 
-    vector2.project(camera);
-    vector2.x = Math.round((0.5 + vector2.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
-    vector2.y = Math.round((0.5 - vector2.y / 2) * (canvas.clientHeight / window.devicePixelRatio));
-
-    annotation2.style.top = `${vector2.y}px`;
-    annotation2.style.left = `${vector2.x}px`;
-    annotation2.style.opacity = spriteBehindObject ? 0.25 : 1;
+        const ann = document.querySelector(selectors[i]);
+        ann.style.top = `${vec.y}px`;
+        ann.style.left = `${vec.x}px`;
+        ann.style.opacity = spriteBehindObject ? 0.25 : 1;
+    }
 }
+
+
 
 function animate() {
     requestAnimationFrame(animate);
