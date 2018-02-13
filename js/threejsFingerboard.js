@@ -25,7 +25,9 @@ function init() {
     parent.appendChild(renderer.domElement);
 
     // Empty Group
-    const FBgroup = createFBgroup(0, -75, 0);
+    createFBgroup(0, -75, 0);
+    const FBgroup = scene.getObjectByName( 'fingerboard group' );
+    console.log('FBgroup is', FBgroup);
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
@@ -33,13 +35,6 @@ function init() {
 
     const spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
     const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
-
-    // //SPTITE GUI
-    // var gui = new dat.GUI();
-    // var spriteGui = gui.addFolder('Sprite position');
-    // spriteGui.add(sprite_20deg.position, 'x', -500, 500);
-    // spriteGui.add(sprite_20deg.position, 'y', -500, 500);
-    // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -52,16 +47,28 @@ function init() {
     createBackgroundPlane(backgroundMat);
 
     //LOAD FINGERBOARD
-    const fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
+    loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
+    const fingerb = scene.getObjectByName('fingerboard');
+    console.log('fingerb is ', fingerb); // fingerb is undefined ?
 
     //INVISIBLE CUBE
-    const invisibleCube = createInvisibleBox(622, 154, 64, FBgroup);
+    createInvisibleBox(622, 154, 64, FBgroup);
+    const invisibleCube = scene.getObjectByName('invCube');
+    console.log('invisibleCube is ', invisibleCube);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     //LOADER
     loadingScreen();
+
+    // //SPTITE GUI
+    // var gui = new dat.GUI();
+    // var spriteGui = gui.addFolder('Sprite position');
+    // spriteGui.add(sprite_20deg.position, 'x', -500, 500);
+    // spriteGui.add(sprite_20deg.position, 'y', -500, 500);
+    // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
+
 }
 
 // FUNCTIONS
@@ -158,6 +165,7 @@ function createInvisibleBox(width, height, depth, parent) {
     var cube = new THREE.Mesh(geometry, material);
     cube.position.set(0, 76, 31);
     cube.visible = false; //hiding the Cube
+    cube.name = 'invCube';
     parent.add(cube);
 
     return cube;
