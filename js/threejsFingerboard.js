@@ -15,6 +15,16 @@ let linePos = [];
 let annPos = [];
 let lines = [];
 const selectors = ['.sloper30','.sloper20'];
+// 2 x 30 Degree Slopers  -- done
+// 2 x 20 Degree Slopers  -- done
+// 1 x Center Jug
+// 2 x Large Jugs
+// 5 x 4 Finger Pockets (deep)
+// 4 x 3 Finger Pockets (deep)
+// 3 x 2 Finger Pockets (deep)
+// 3 x 4 Finger Crimps
+// 2 x 3 Finger Crimps
+// 2 x 2 Finger Crimps
 
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
