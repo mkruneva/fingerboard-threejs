@@ -59,7 +59,7 @@ body {
 
 /* Loader */
 
-#loader {
+#loader > .anim {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -67,13 +67,25 @@ body {
     width: 200px;
     height: 200px;
     margin: -75px 0 0 -75px;
-    border: 15px solid rgba(230, 230, 230, 0.84);
+    border: 15px solid rgba(230, 230, 230, 0.64);
     border-radius: 50%;
     border-top: 15px solid rgba(0, 0, 0, 0.64);
     width: 160px;
     height: 160px;
     -webkit-animation: spin 2.2s linear infinite;
     animation: spin 2.2s linear infinite;
+}
+
+#loader > .text {
+    position: absolute;
+    left: 46%;
+    top: 47%;
+    z-index: 4;
+    color: rgba(230, 230, 230, 0.84);
+    text-align: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 200%;
+    
 }
 
 @-webkit-keyframes spin {

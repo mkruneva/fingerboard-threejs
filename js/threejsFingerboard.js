@@ -7,6 +7,8 @@ let renderer;
 let sprite;
 let spriteBehindObject;
 
+let loadPercent;
+
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
 
@@ -201,6 +203,13 @@ function loadObject(objpath, material, parent) {
                 }
             });
             parent.add(object);
+        },
+        function ( xhr ) {
+            loadPercent = Math.round( xhr.loaded / xhr.total * 100 );
+            document.querySelector('.percent').innerHTML = loadPercent;;
+        },
+        function ( error ) {
+            console.log( 'An error happened' );
         }
     );
 }
@@ -284,7 +293,6 @@ function updateScreenPosition() {
         ann.style.opacity = spriteBehindObject ? 0.25 : 1;
     }
 }
-
 
 
 function animate() {
