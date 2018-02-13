@@ -8,12 +8,10 @@ let sprite;
 let spriteBehindObject;
 
 let loadPercent;
-
-let spr1;
 let fbGroup;
 
 let linePos = [];
-let lineSecPos = [];
+// let lineSecPos = [];
 let annPos = [];
 let lines = [];
 const selectors = ['.sloper30','.sloper20'];
@@ -40,7 +38,7 @@ function init() {
 
     // line 
     linePos = [[-165, 134, 34], [-83, 141, 34]];
-    lineSecPos = [[-165, 134, 34], [-83, 141, 34]];
+    let lineSecPos = [[-165, 134, 34], [-83, 141, 34]];
     annPos = [[-165, 134, 34], [-83, 141, 34]];
     const difference = [15, 27, 26];
     for (let i = 0; i < linePos.length; i++) {
@@ -53,30 +51,8 @@ function init() {
         annPos[i][2] = lineSecPos[i][2];
     }
 
-    // //helper sphere 
-    // var geo = new THREE.SphereGeometry( 5, 32, 32 );
-    // var mat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    // var sphere = new THREE.Mesh( geo, mat );
-    // sphere.position.set(-83, 141, 34);
-    // fbGroup.add( sphere );
-
-    // var sphere2 = new THREE.Mesh( geo, mat );
-    // sphere2.position.set(-150, 160, 60); // +15, +27, -26
-    // fbGroup.add( sphere2 );
-
-    // //Line Sphere Helper GUI
-    // var gui = new dat.GUI();
-    // var lineGui = gui.addFolder('Line position');
-    // lineGui.add(sphere.position, 'x', -180, -80);
-    // lineGui.add(sphere.position, 'y', 120, 200);
-    // lineGui.add(sphere.position, 'z', 20, 80);
-
-    //ANNOTATIONS
-    // const canvas = document.createElement('canvas');
-    // const context = canvas.getContext('2d');
-
-    spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
-    const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
+    // spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
+    // const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -98,23 +74,39 @@ function init() {
     //LOADER
     loadingScreen();
 
-    
+    // //helper sphere 
+    // var geo = new THREE.SphereGeometry( 5, 32, 32 );
+    // var mat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    // var sphere = new THREE.Mesh( geo, mat );
+    // sphere.position.set(-83, 141, 34);
+    // fbGroup.add( sphere );
+
+    // //Line Sphere Helper GUI
+    // var gui = new dat.GUI();
+    // var lineGui = gui.addFolder('Line position');
+    // lineGui.add(sphere.position, 'x', -180, -80);
+    // lineGui.add(sphere.position, 'y', 120, 200);
+    // lineGui.add(sphere.position, 'z', 20, 80);
+
+    //ANNOTATIONS
+    // const canvas = document.createElement('canvas');
+    // const context = canvas.getContext('2d');
 }
 
 // FUNCTIONS
 
 // Annotations and Sprites 
-function createSprite(x, y, z, tex, scale, parent) {
-    var spriteMap = new THREE.TextureLoader().load(tex);
-    var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
-    var sprite = new THREE.Sprite(spriteMaterial);
-    sprite.position.set(x + 15, y + 27, z + 26);
-    sprite.scale.set(10, 10, 1);
-    sprite.visible = false;
-    parent.add(sprite);
+// function createSprite(x, y, z, tex, scale, parent) {
+//     var spriteMap = new THREE.TextureLoader().load(tex);
+//     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
+//     var sprite = new THREE.Sprite(spriteMaterial);
+//     sprite.position.set(x + 15, y + 27, z + 26);
+//     sprite.scale.set(10, 10, 1);
+//     sprite.visible = false;
+//     parent.add(sprite);
 
-    return sprite;
-}
+//     return sprite;
+// }
 
 //Materials and Textures
 function repeatTex(mapName, repeat) {
