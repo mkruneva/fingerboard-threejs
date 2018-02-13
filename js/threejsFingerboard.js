@@ -60,9 +60,6 @@ function init() {
         pos.ann.push([d0, d1 - 75, d2]);
     }
 
-    console.log('pos.ann is', pos.ann);
-    console.log('pos.lineSec is', pos.lineSec);
-
     // spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
     // const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
