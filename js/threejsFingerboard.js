@@ -11,9 +11,10 @@ let loadPercent;
 let fbGroup;
 
 let linePos = [];
-// let lineSecPos = [];
-let annPos = [];
 let lines = [];
+let pos = { lineFir: [],
+            lineSec: [],
+            ann: []};
 const selectors = ['.sloper30','.sloper20'];
 // 2 x 30 Degree Slopers  -- done
 // 2 x 20 Degree Slopers  -- done
@@ -34,7 +35,7 @@ animate();
 
 function init() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding 
+    camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding
     scene.add(camera);
     camera.position.set(-50, 0, 750);
 
@@ -46,20 +47,21 @@ function init() {
     // Empty Group
     fbGroup = createfbGroup(0, -75, 0);
 
-    // line 
-    linePos = [[-165, 134, 34], [-83, 141, 34]];
-    let lineSecPos = [[-165, 134, 34], [-83, 141, 34]];
-    annPos = [[-165, 134, 34], [-83, 141, 34]];
+    // line
+    pos.lineFir = [[-165, 134, 34], [-83, 141, 34]];
     const difference = [15, 27, 26];
-    for (let i = 0; i < linePos.length; i++) {
-        lines[i] = createLine(linePos[i]);
-        lineSecPos[i][0] = linePos[i][0] + difference[0];
-        lineSecPos[i][1] = linePos[i][1] + difference[1];
-        lineSecPos[i][2] = linePos[i][2] + difference[2];
-        annPos[i][0] = lineSecPos[i][0];
-        annPos[i][1] = lineSecPos[i][1] - 75;
-        annPos[i][2] = lineSecPos[i][2];
+    for (let i = 0; i < pos.lineFir.length; i++) {
+        lines[i] = createLine(pos.lineFir[i]);
+        const d0 = pos.lineFir[i][0] + difference[0];
+        const d1 = pos.lineFir[i][1] + difference[1];
+        const d2 = pos.lineFir[i][2] + difference[2];
+
+        pos.lineSec.push([d0, d1, d2]);
+        pos.ann.push([d0, d1 - 75, d2]);
     }
+
+    console.log('pos.ann is', pos.ann);
+    console.log('pos.lineSec is', pos.lineSec);
 
     // spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
     // const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
@@ -242,7 +244,7 @@ function loadObject(objpath, material, parent) {
         },
         function ( xhr ) {
             loadPercent = Math.round( xhr.loaded / xhr.total * 100 );
-            document.querySelector('.percent').innerHTML = loadPercent;;
+            document.querySelector('.percent').innerHTML = loadPercent;
         },
         function ( error ) {
             console.log( 'An error happened' );
@@ -325,5 +327,5 @@ function animate() {
 function render() {
     renderer.render(scene, camera);
     updateAnnotationOpacity();
-    updateScreenPosition(annPos);
+    updateScreenPosition(pos.ann);
 }
