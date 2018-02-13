@@ -7,11 +7,11 @@ let renderer;
 let sprite;
 let spriteBehindObject;
 
-init();
-animate();
-
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
+
+init();
+animate();
 
 function init() {
     scene = new THREE.Scene();
@@ -46,13 +46,12 @@ function init() {
     createBackgroundPlane(backgroundMat);
 
     //LOAD FINGERBOARD
-    loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
-    // const fingerb = scene.getObjectByName('fingerboard');
+    let fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
     // console.log('fingerb is ', fingerb); // fingerb is undefined ?
 
     //INVISIBLE CUBE
     const invisibleCube = createInvisibleBox(622, 154, 64, FBgroup);
-    console.log('invisibleCube is', invisibleCube);
+    // console.log('invisibleCube is', invisibleCube);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
