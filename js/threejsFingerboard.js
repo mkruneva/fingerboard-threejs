@@ -32,27 +32,32 @@ function init() {
     // Empty Group
     fbGroup = createfbGroup(0, -75, 0);
 
-    // line
-    var material = new THREE.LineBasicMaterial({ color: 0xffffff });
-    var geometry = new THREE.Geometry();
-    geometry.vertices.push(new THREE.Vector3(-176, 0, 0));
-    geometry.vertices.push(new THREE.Vector3(176, 181, 50));
-    var line = new THREE.Line(geometry, material);
-    console.log(line.geometry.vertices[0]);
-    fbGroup.add(line);
+    //line 
+    createLine([-165, 133, 34]);
 
-    // //SPTITE GUI
+    // //helper sphere 
+    // var geo = new THREE.SphereGeometry( 5, 32, 32 );
+    // var mat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    // var sphere1 = new THREE.Mesh( geo, mat );
+    // sphere1.position.set(-165, 133, 34);  
+    // fbGroup.add( sphere1 );
+
+    // var sphere = new THREE.Mesh( geo, mat );
+    // sphere.position.set(-150, 160, 60); // +15, +27, -26
+    // fbGroup.add( sphere );
+
+    // //Line Sphere Helper GUI
     // var gui = new dat.GUI();
     // var lineGui = gui.addFolder('Line position');
-    // lineGui.add(line.geometry.vertices[0], 'x', -500, 500);
-    // lineGui.add(line.geometry.vertices[0], 'y', -500, 500);
-    // lineGui.add(line.geometry.vertices[0], 'z', -500, 500);
+    // lineGui.add(sphere.position, 'x', -180, -120);
+    // lineGui.add(sphere.position, 'y', 120, 200);
+    // lineGui.add(sphere.position, 'z', 20, 80);
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
+    spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
     const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
     //MATERIALS
@@ -85,8 +90,8 @@ function createSprite(x, y, z, tex, scale, parent) {
     var spriteMap = new THREE.TextureLoader().load(tex);
     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
     var sprite = new THREE.Sprite(spriteMaterial);
-    sprite.position.set(x, y, z);
-    sprite.scale.set(20, 20, 1);
+    sprite.position.set(x + 15, y + 27, z + 26);
+    sprite.scale.set(10, 10, 1);
     sprite.visible = false;
     parent.add(sprite);
 
@@ -166,6 +171,18 @@ function createfbGroup(x, y, z) {
     return fbGroup;
 }
 
+// Line 
+function createLine([x, y, z]) {
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.4, linecap: 'round' });
+    let geometry = new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(x, y, z));
+    geometry.vertices.push(new THREE.Vector3(x + 15, y + 27, z + 26));
+    let line = new THREE.Line(geometry, material);
+    fbGroup.add(line);
+
+    return line;
+}
+
 //Function LIGHTS
 function createLights() {
     var ambLight = new THREE.AmbientLight(0x404040); // soft white light
@@ -234,8 +251,8 @@ function loadingScreen(sprite1, sprite2) {
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
         annDiv.style.display = 'block';
-        sprite1.visible = true;
-        sprite2.visible = true;
+        // sprite1.visible = true;
+        // sprite2.visible = true;
     };
 }
 
@@ -252,8 +269,7 @@ function createRenderer(clearColour) {
 
 function updateAnnotationOpacity(sprite1, fbGroup) {
         // currently works for sprite1
-        const meshDistance = camera.position.distanceTo(fbGroup.position);
-        // const meshDistance = camera.position.distanceTo(meshPosition);
+        const meshDistance = camera.position.distanceTo(fbGroup.position);;
         const spriteDistance = camera.position.distanceTo(sprite1.position);
         spriteBehindObject = spriteDistance > meshDistance;
         sprite1.material.opacity = spriteBehindObject ? 0.1 : 1;
@@ -261,7 +277,7 @@ function updateAnnotationOpacity(sprite1, fbGroup) {
 
 
 function updateScreenPosition() {
-    const annPos = [[-176, 81, 50],[-87, 81, 50]];
+    const annPos = [[-150, 85, 60],[-87, 81, 50]];  //line point 2 pos - fBgroup
     const selectors = ['.sloper30','.sloper20']
     let ann = [];
 

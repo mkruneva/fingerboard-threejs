@@ -23,15 +23,16 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
-    padding: 0.3em;
-    /* width: 120px; */
+    padding: 0.25em;
+    margin-left: 15px;
+    margin-top: -35px;
     color: #fff;
     background: rgba(50, 50, 50, 0.8);
-    border-radius: .2em;
+    border-radius: .1em;
     font-size: 15px;
     line-height: 1.2;
     transition: opacity .5s;
-    &::before {
+    /* &::before {
         content: '1';
         position: absolute;
         top: -30px;
@@ -44,15 +45,10 @@ body {
         line-height: 30px;
         text-align: center;
         background: rgba(0, 0, 0, 0.8);
-    }
+    } */
 }
 
-.sloper30 {
-    margin-left: 15px;
-    margin-top: 15px;
-}
-
-.annotation>p {
+.annotation > p {
     margin: 3px;
 }
 
