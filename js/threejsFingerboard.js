@@ -9,6 +9,9 @@ let spriteBehindObject;
 
 let loadPercent;
 
+let spr1;
+let invCube;
+
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
 
@@ -34,7 +37,7 @@ function init() {
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    const spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
+    spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
     const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
 
     //MATERIALS
@@ -52,7 +55,7 @@ function init() {
     // console.log('fingerb is ', fingerb); // fingerb is undefined ?
 
     //INVISIBLE CUBE
-    const invisibleCube = createInvisibleBox(622, 154, 64, FBgroup);
+    invCube = createInvisibleBox(622, 154, 64, FBgroup);
     // console.log('invisibleCube is', invisibleCube);
 
     //Controls
@@ -254,22 +257,12 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateAnnotationOpacity() {
-
-        // WORKAROUND - invisibleCube and Sprite - not defined 
-        const sprite1 = scene.children[1].children[0];
-        // const sprite2 = scene.children[1].children[1];
-        const invCube = scene.children[1].children[2];
-        const meshDistance = camera.position.distanceTo(invCube.position);
+function updateAnnotationOpacity(sprite1, invisibleCube) {
+        // currently works for sprite1
+        const meshDistance = camera.position.distanceTo(invisibleCube.position);
         const spriteDistance = camera.position.distanceTo(sprite1.position);
-        // const spriteDistance2 = camera.position.distanceTo(sprite2.position);
         spriteBehindObject = spriteDistance > meshDistance;
-        // spriteBehindObject2 = spriteDistance2 > meshDistance;
         sprite1.material.opacity = spriteBehindObject ? 0.25 : 1;
-        // sprite2.material.opacity = spriteBehindObject2 ? 0.25 : 1;
-
-    // const meshDistance = camera.position.distanceTo(invisibleCube.position);
-    // const spriteDistance = camera.position.distanceTo(sprite.position);
 }
 
 
@@ -290,6 +283,7 @@ function updateScreenPosition() {
         const ann = document.querySelector(selectors[i]);
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
+        console.log('spriteBehindObject inside updateScreenPosition is ', spriteBehindObject);
         ann.style.opacity = spriteBehindObject ? 0.25 : 1;
     }
 }
@@ -303,6 +297,6 @@ function animate() {
 
 function render() {
     renderer.render(scene, camera);
-    updateAnnotationOpacity();
+    updateAnnotationOpacity(spr1, invCube);
     updateScreenPosition();
 }
