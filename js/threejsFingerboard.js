@@ -10,7 +10,7 @@ let spriteBehindObject;
 let loadPercent;
 
 let spr1;
-let invCube;
+let fbGroup;
 
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
@@ -30,15 +30,14 @@ function init() {
     parent.appendChild(renderer.domElement);
 
     // Empty Group
-    createFBgroup(0, -75, 0);
-    const FBgroup = scene.getObjectByName( 'fingerboard group' );
+    fbGroup = createfbGroup(0, -75, 0);
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
 
-    spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 30 degrees
-    const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, FBgroup); //sloper 20 degrees
+    spr1 = createSprite(-176, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
+    const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -51,12 +50,8 @@ function init() {
     createBackgroundPlane(backgroundMat);
 
     //LOAD FINGERBOARD
-    let fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
+    let fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, fbGroup);
     // console.log('fingerb is ', fingerb); // fingerb is undefined ?
-
-    //INVISIBLE CUBE
-    invCube = createInvisibleBox(622, 154, 64, FBgroup);
-    // console.log('invisibleCube is', invisibleCube);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -150,26 +145,14 @@ function createBackgroundPlane(material) {
     return plane;
 }
 
-function createFBgroup(x, y, z) {
-    const fbgroup = new THREE.Object3D;
-    fbgroup.name = 'fingerboard group';
-    fbgroup.position.set(x, y, z);
-    fbgroup.rotation.set(0, 0, 0);
-    scene.add( fbgroup );
+function createfbGroup(x, y, z) {
+    const fbGroup = new THREE.Object3D;
+    fbGroup.name = 'fingerboard group';
+    fbGroup.position.set(x, y, z);
+    fbGroup.rotation.set(0, 0, 0);
+    scene.add( fbGroup );
 
-    return fbgroup;
-}
-
-function createInvisibleBox(width, height, depth, parent) {
-    var geometry = new THREE.CubeGeometry(width, height, depth);
-    var material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 76, 31);
-    cube.visible = false; //hiding the Cube
-    cube.name = 'invCube';
-    parent.add(cube);
-
-    return cube;
+    return fbGroup;
 }
 
 //Function LIGHTS
@@ -217,7 +200,6 @@ function loadObject(objpath, material, parent) {
     );
 }
 
-
 function createGUI() {
     var gui = new dat.GUI();
     var cam = gui.addFolder('Camera');
@@ -257,12 +239,13 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateAnnotationOpacity(sprite1, invisibleCube) {
+function updateAnnotationOpacity(sprite1, fbGroup) {
         // currently works for sprite1
-        const meshDistance = camera.position.distanceTo(invisibleCube.position);
+        const meshDistance = camera.position.distanceTo(fbGroup.position);
+        // const meshDistance = camera.position.distanceTo(meshPosition);
         const spriteDistance = camera.position.distanceTo(sprite1.position);
         spriteBehindObject = spriteDistance > meshDistance;
-        sprite1.material.opacity = spriteBehindObject ? 0.25 : 1;
+        sprite1.material.opacity = spriteBehindObject ? 0.1 : 1;
 }
 
 
@@ -284,7 +267,7 @@ function updateScreenPosition() {
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
         console.log('spriteBehindObject inside updateScreenPosition is ', spriteBehindObject);
-        ann.style.opacity = spriteBehindObject ? 0.25 : 1;
+        ann.style.opacity = spriteBehindObject ? 0.1 : 1;
     }
 }
 
@@ -297,6 +280,6 @@ function animate() {
 
 function render() {
     renderer.render(scene, camera);
-    updateAnnotationOpacity(spr1, invCube);
+    updateAnnotationOpacity(spr1, fbGroup);
     updateScreenPosition();
 }
