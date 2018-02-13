@@ -27,7 +27,6 @@ function init() {
     // Empty Group
     createFBgroup(0, -75, 0);
     const FBgroup = scene.getObjectByName( 'fingerboard group' );
-    console.log('FBgroup is', FBgroup);
 
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
@@ -48,19 +47,18 @@ function init() {
 
     //LOAD FINGERBOARD
     loadObject('obj/fingerboard-obj.obj', fingerboardMat, FBgroup);
-    const fingerb = scene.getObjectByName('fingerboard');
-    console.log('fingerb is ', fingerb); // fingerb is undefined ?
+    // const fingerb = scene.getObjectByName('fingerboard');
+    // console.log('fingerb is ', fingerb); // fingerb is undefined ?
 
     //INVISIBLE CUBE
-    createInvisibleBox(622, 154, 64, FBgroup);
-    const invisibleCube = scene.getObjectByName('invCube');
-    console.log('invisibleCube is ', invisibleCube);
+    const invisibleCube = createInvisibleBox(622, 154, 64, FBgroup);
+    console.log('invisibleCube is', invisibleCube);
 
     //Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     //LOADER
-    loadingScreen();
+    loadingScreen(spr1, spr2);
 
     // //SPTITE GUI
     // var gui = new dat.GUI();
@@ -68,7 +66,6 @@ function init() {
     // spriteGui.add(sprite_20deg.position, 'x', -500, 500);
     // spriteGui.add(sprite_20deg.position, 'y', -500, 500);
     // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
-
 }
 
 // FUNCTIONS
@@ -225,7 +222,7 @@ function createGUI() {
     sportlightGui.add(spotLight.rotation, 'z', 0, 2 * Math.PI);
 }
 
-function loadingScreen() {
+function loadingScreen(sprite1, sprite2) {
     const loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
         loaderDiv.style.display = 'block';
@@ -233,8 +230,6 @@ function loadingScreen() {
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
         annDiv.style.display = 'block';
-        const sprite1 = scene.children[1].children[0];
-        const sprite2 = scene.children[1].children[1];
         sprite1.visible = true;
         sprite2.visible = true;
     };
@@ -268,7 +263,6 @@ function updateAnnotationOpacity() {
     // const meshDistance = camera.position.distanceTo(invisibleCube.position);
     // const spriteDistance = camera.position.distanceTo(sprite.position);
 }
-
 
 
 function updateScreenPosition() {
