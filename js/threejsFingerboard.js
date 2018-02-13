@@ -184,6 +184,7 @@ function createfbGroup(x, y, z) {
     fbGroup.name = 'fingerboard group';
     fbGroup.position.set(x, y, z);
     fbGroup.rotation.set(0, 0, 0);
+    fbGroup.visible = false;
     scene.add( fbGroup );
 
     return fbGroup;
@@ -270,8 +271,7 @@ function loadingScreen() {
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
         annDiv.style.display = 'block';
-        console.log(lines);
-        lines.map(l => l.visible = true)
+        fbGroup.visible = true;
     };
 }
 
@@ -286,12 +286,13 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateAnnotationOpacity(sprite1, fbGroup) {
-        // currently works for sprite1
-        const meshDistance = camera.position.distanceTo(fbGroup.position);;
-        const spriteDistance = camera.position.distanceTo(sprite1.position);
-        spriteBehindObject = spriteDistance > meshDistance;
-        sprite1.material.opacity = spriteBehindObject ? 0.1 : 1;
+function updateAnnotationOpacity() {
+        const meshDistance = camera.position.distanceTo(fbGroup.position);
+        lines.map(l => {
+            let spriteDistance = camera.position.distanceTo(l.position);
+            spriteBehindObject = spriteDistance > meshDistance;
+            l.visible = spriteBehindObject ? false : true;
+        });
 }
 
 function updateScreenPosition(annotPos) {
@@ -313,7 +314,6 @@ function updateScreenPosition(annotPos) {
     }
 }
 
-
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
@@ -322,6 +322,6 @@ function animate() {
 
 function render() {
     renderer.render(scene, camera);
-    updateAnnotationOpacity(spr1, fbGroup);
+    updateAnnotationOpacity();
     updateScreenPosition(annPos);
 }
