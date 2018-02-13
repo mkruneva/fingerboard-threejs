@@ -12,6 +12,12 @@ let loadPercent;
 let spr1;
 let fbGroup;
 
+let linePos = [];
+let lineSecPos = [];
+let annPos = [];
+let lines = [];
+const selectors = ['.sloper30','.sloper20'];
+
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
 
@@ -32,24 +38,36 @@ function init() {
     // Empty Group
     fbGroup = createfbGroup(0, -75, 0);
 
-    //line 
-    createLine([-165, 133, 34]);
+    // line 
+    linePos = [[-165, 134, 34], [-83, 141, 34]];
+    lineSecPos = [[-165, 134, 34], [-83, 141, 34]];
+    annPos = [[-165, 134, 34], [-83, 141, 34]];
+    const difference = [15, 27, 26];
+    for (let i = 0; i < linePos.length; i++) {
+        lines[i] = createLine(linePos[i]);
+        lineSecPos[i][0] = linePos[i][0] + difference[0];
+        lineSecPos[i][1] = linePos[i][1] + difference[1];
+        lineSecPos[i][2] = linePos[i][2] + difference[2];
+        annPos[i][0] = lineSecPos[i][0];
+        annPos[i][1] = lineSecPos[i][1] - 75;
+        annPos[i][2] = lineSecPos[i][2];
+    }
 
     // //helper sphere 
     // var geo = new THREE.SphereGeometry( 5, 32, 32 );
     // var mat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    // var sphere1 = new THREE.Mesh( geo, mat );
-    // sphere1.position.set(-165, 133, 34);  
-    // fbGroup.add( sphere1 );
-
     // var sphere = new THREE.Mesh( geo, mat );
-    // sphere.position.set(-150, 160, 60); // +15, +27, -26
+    // sphere.position.set(-83, 141, 34);
     // fbGroup.add( sphere );
+
+    // var sphere2 = new THREE.Mesh( geo, mat );
+    // sphere2.position.set(-150, 160, 60); // +15, +27, -26
+    // fbGroup.add( sphere2 );
 
     // //Line Sphere Helper GUI
     // var gui = new dat.GUI();
     // var lineGui = gui.addFolder('Line position');
-    // lineGui.add(sphere.position, 'x', -180, -120);
+    // lineGui.add(sphere.position, 'x', -180, -80);
     // lineGui.add(sphere.position, 'y', 120, 200);
     // lineGui.add(sphere.position, 'z', 20, 80);
 
@@ -78,7 +96,7 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     //LOADER
-    loadingScreen(spr1, spr2);
+    loadingScreen();
 
     
 }
@@ -178,6 +196,7 @@ function createLine([x, y, z]) {
     geometry.vertices.push(new THREE.Vector3(x, y, z));
     geometry.vertices.push(new THREE.Vector3(x + 15, y + 27, z + 26));
     let line = new THREE.Line(geometry, material);
+    line.visible = false;
     fbGroup.add(line);
 
     return line;
@@ -243,7 +262,7 @@ function createGUI() {
     sportlightGui.add(spotLight.rotation, 'z', 0, 2 * Math.PI);
 }
 
-function loadingScreen(sprite1, sprite2) {
+function loadingScreen() {
     const loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
         loaderDiv.style.display = 'block';
@@ -251,8 +270,8 @@ function loadingScreen(sprite1, sprite2) {
     THREE.DefaultLoadingManager.onLoad = function() {
         loaderDiv.style.display = 'none';
         annDiv.style.display = 'block';
-        // sprite1.visible = true;
-        // sprite2.visible = true;
+        console.log(lines);
+        lines.map(l => l.visible = true)
     };
 }
 
@@ -275,22 +294,19 @@ function updateAnnotationOpacity(sprite1, fbGroup) {
         sprite1.material.opacity = spriteBehindObject ? 0.1 : 1;
 }
 
-
-function updateScreenPosition() {
-    const annPos = [[-150, 85, 60],[-87, 81, 50]];  //line point 2 pos - fBgroup
-    const selectors = ['.sloper30','.sloper20']
+function updateScreenPosition(annotPos) {
     let ann = [];
+    let canvas = renderer.domElement;
 
-    for (let i = 0; i < annPos.length; i++) {
-        const pos = annPos[i];
+    for (let i = 0; i < annotPos.length; i++) {
+        const pos = annotPos[i];
         const vec = new THREE.Vector3(pos[0], pos[1], pos[2]);
-        const canvas = renderer.domElement;
 
         vec.project(camera);
         vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
         vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
 
-        const ann = document.querySelector(selectors[i]);
+        ann = document.querySelector(selectors[i]);
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
         ann.style.opacity = spriteBehindObject ? 0.1 : 1;
@@ -307,5 +323,5 @@ function animate() {
 function render() {
     renderer.render(scene, camera);
     updateAnnotationOpacity(spr1, fbGroup);
-    updateScreenPosition();
+    updateScreenPosition(annPos);
 }
