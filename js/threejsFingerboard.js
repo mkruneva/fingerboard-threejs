@@ -32,6 +32,22 @@ function init() {
     // Empty Group
     fbGroup = createfbGroup(0, -75, 0);
 
+    // line
+    var material = new THREE.LineBasicMaterial({ color: 0xffffff });
+    var geometry = new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(-176, 0, 0));
+    geometry.vertices.push(new THREE.Vector3(176, 181, 50));
+    var line = new THREE.Line(geometry, material);
+    console.log(line.geometry.vertices[0]);
+    fbGroup.add(line);
+
+    // //SPTITE GUI
+    // var gui = new dat.GUI();
+    // var lineGui = gui.addFolder('Line position');
+    // lineGui.add(line.geometry.vertices[0], 'x', -500, 500);
+    // lineGui.add(line.geometry.vertices[0], 'y', -500, 500);
+    // lineGui.add(line.geometry.vertices[0], 'z', -500, 500);
+
     //ANNOTATIONS
     // const canvas = document.createElement('canvas');
     // const context = canvas.getContext('2d');
@@ -59,12 +75,7 @@ function init() {
     //LOADER
     loadingScreen(spr1, spr2);
 
-    // //SPTITE GUI
-    // var gui = new dat.GUI();
-    // var spriteGui = gui.addFolder('Sprite position');
-    // spriteGui.add(sprite_20deg.position, 'x', -500, 500);
-    // spriteGui.add(sprite_20deg.position, 'y', -500, 500);
-    // spriteGui.add(sprite_20deg.position, 'z', -500, 500);
+    
 }
 
 // FUNCTIONS
@@ -266,7 +277,6 @@ function updateScreenPosition() {
         const ann = document.querySelector(selectors[i]);
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
-        console.log('spriteBehindObject inside updateScreenPosition is ', spriteBehindObject);
         ann.style.opacity = spriteBehindObject ? 0.1 : 1;
     }
 }
