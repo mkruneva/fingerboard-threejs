@@ -239,21 +239,6 @@ function loadObject(objpath, material, parent) {
     );
 }
 
-function createGUI() {
-    var gui = new dat.GUI();
-    var cam = gui.addFolder('Camera');
-    cam.add(camera.position, 'x', -100, 150);
-    cam.add(camera.position, 'y', -100, 150);
-    cam.add(camera.position, 'z', 0, 1500);
-    var sportlightGui = gui.addFolder('spot light');
-    sportlightGui.add(spotLight.position, 'x', -500, 500);
-    sportlightGui.add(spotLight.position, 'y', 0, 2000);
-    sportlightGui.add(spotLight.position, 'z', -500, 500);
-    sportlightGui.add(spotLight.rotation, 'x', 0, 2 * Math.PI);
-    sportlightGui.add(spotLight.rotation, 'y', 0, 2 * Math.PI);
-    sportlightGui.add(spotLight.rotation, 'z', 0, 2 * Math.PI);
-}
-
 function loadingScreen(fbGroup) {
     const loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
