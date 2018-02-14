@@ -8,6 +8,7 @@ let renderer;
 
 let meshDistance;
 let fbGroup;
+let linesGroup;
 
 let lines = [];
 let pos = {
@@ -24,12 +25,15 @@ const selectors = ['.sloper30', '.sloper20', '.jugL', '.jugC',
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
 
+var button = document.querySelector('.showOrNot');
+button.addEventListener("click", hideClick);
+
 init();
 animate();
 
 function init() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(35, 5 / 3, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding
+    camera = new THREE.PerspectiveCamera(35, 10 / 5, 1, 2000); //5/3 ratio corresponds to the 0.6 width/height canvas container padding
     scene.add(camera);
     camera.position.set(-50, 0, 750);
 
@@ -42,29 +46,35 @@ function init() {
     fbGroup = createfbGroup(0, -75, 0);
     meshDistance = camera.position.distanceTo(fbGroup.position);
 
-    // lines
-    pos.lineFir = [
-        [-165, 134, 34], // 30 sloper
-        [-83, 141, 34], //20 sloper
-        [0, 68, 55], // large Jug
-        [0, 24, 40], // central Jug
-        [-91, 68, 55], // 2 Finger Pocket
-        [-161, 68, 55], // 3 Finger Pocket
-        [-253, 68, 55], // 4 Finger Pocket
-        [-103, 25, 40], // 2 Finger Cripm
-        [-188, 25, 40], // 3 Finger Cripm
-        [-270, 25, 40] // 4 Finger Cripm
-    ];
-    const difference = [15, 27, 26];
-    for (let i = 0; i < pos.lineFir.length; i++) {
-        lines[i] = createLine(pos.lineFir[i]);
-        const d0 = pos.lineFir[i][0] + difference[0];
-        const d1 = pos.lineFir[i][1] + difference[1];
-        const d2 = pos.lineFir[i][2] + difference[2];
+    //
+    linesGroup = new THREE.Object3D;
+    fbGroup.add(linesGroup);
 
-        pos.lineSec.push([d0, d1, d2]);
-        pos.ann.push([d0, d1 - 75, d2]);
-    }
+    if (screen.width > 992) {
+        // lines
+        pos.lineFir = [
+            [-165, 134, 34], // 30 sloper
+            [-83, 141, 34], //20 sloper
+            [0, 68, 55], // large Jug
+            [0, 24, 40], // central Jug
+            [-91, 68, 55], // 2 Finger Pocket
+            [-161, 68, 55], // 3 Finger Pocket
+            [-253, 68, 55], // 4 Finger Pocket
+            [-103, 25, 40], // 2 Finger Cripm
+            [-188, 25, 40], // 3 Finger Cripm
+            [-270, 25, 40] // 4 Finger Cripm
+        ];
+        const difference = [15, 27, 26];
+        for (let i = 0; i < pos.lineFir.length; i++) {
+            lines[i] = createLine(pos.lineFir[i]);
+            const d0 = pos.lineFir[i][0] + difference[0];
+            const d1 = pos.lineFir[i][1] + difference[1];
+            const d2 = pos.lineFir[i][2] + difference[2];
+
+            pos.lineSec.push([d0, d1, d2]);
+            pos.ann.push([d0, d1 - 75, d2]);
+        }
+    } else {linesGroup.visible = false}
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -176,7 +186,7 @@ function createLine([x, y, z]) {
     geometry.vertices.push(new THREE.Vector3(x + 15, y + 27, z + 26));
     let line = new THREE.Line(geometry, material);
     line.visible = false;
-    fbGroup.add(line);
+    linesGroup.add(line);
 
     return line;
 }
@@ -255,25 +265,34 @@ function updateScreenPosition(annPos, meshDist, selects) {
     let canvas = renderer.domElement;
 
     annPos.map((p, i) => {
-        const vec = new THREE.Vector3(p[0], p[1], p[2]);
-        const vec2 = new THREE.Vector3(p[0], p[1] - 27, p[2]);
-        let spritesBehindObject;
+        if (lines.length > 0) {
+            const vec = new THREE.Vector3(p[0], p[1], p[2]);
+            const vec2 = new THREE.Vector3(p[0], p[1] - 27, p[2]);
+            let spritesBehindObject;
 
-        // Annotation position
-        vec.project(camera);
-        vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
-        vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
+            // Annotation position
+            vec.project(camera);
+            vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
+            vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
 
-        ann = document.querySelector(selects[i]);
-        ann.style.top = `${vec.y}px`;
-        ann.style.left = `${vec.x}px`;
+            ann = document.querySelector(selects[i]);
+            ann.style.top = `${vec.y}px`;
+            ann.style.left = `${vec.x}px`;
 
-        // opacity
-        let spriteDistance = camera.position.distanceTo(vec2);
-        spritesBehindObject = spriteDistance > meshDist;
-        ann.style.opacity = spritesBehindObject ? 0.1 : 1;
-        lines[i].visible = spritesBehindObject ? false : true;
+            // opacity
+            let spriteDistance = camera.position.distanceTo(vec2);
+            spritesBehindObject = spriteDistance > meshDist;
+            ann.style.opacity = spritesBehindObject ? 0.1 : 1;
+
+            lines[i].visible = spritesBehindObject ? false : true;
+        }
     });
+}
+
+function hideClick() {
+    annDiv.style.display = 'none';
+    linesGroup.visible = false;
+    console.log(lines);
 }
 
 function animate() {
