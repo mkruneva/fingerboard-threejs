@@ -103,25 +103,7 @@ function init() {
 
 // end of init()
 
-//ANNOTATIONS AND SPRITES
-// const canvas = document.createElement('canvas');
-// const context = canvas.getContext('2d');
 
-// spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
-// const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
-
-// Annotations and Sprites 
-// function createSprite(x, y, z, tex, scale, parent) {
-//     var spriteMap = new THREE.TextureLoader().load(tex);
-//     var spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap, color: 0xffffff });
-//     var sprite = new THREE.Sprite(spriteMaterial);
-//     sprite.position.set(x + 15, y + 27, z + 26);
-//     sprite.scale.set(10, 10, 1);
-//     sprite.visible = false;
-//     parent.add(sprite);
-
-//     return sprite;
-// }
 
 // FUNCTIONS
 
