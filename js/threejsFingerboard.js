@@ -86,19 +86,6 @@ function init() {
     //LOADER
     loadingScreen(fbGroup);
 
-    // //helper sphere 
-    // var geo = new THREE.SphereGeometry(5, 32, 32);
-    // var mat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-    // var sphere = new THREE.Mesh(geo, mat);
-    // sphere.position.set(-253, 25, 55);
-    // fbGroup.add(sphere);
-
-    // //Line Sphere Helper GUI
-    // var gui = new dat.GUI();
-    // var lineGui = gui.addFolder('Line position');
-    // lineGui.add(sphere.position, 'x', -300, -100);
-    // lineGui.add(sphere.position, 'y', 0, 200);
-    // lineGui.add(sphere.position, 'z', 20, 180);
 }
 
 // end of init()
