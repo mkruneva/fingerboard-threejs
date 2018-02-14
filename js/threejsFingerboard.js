@@ -1,3 +1,4 @@
+"use strict";
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 let camera;
@@ -5,17 +6,20 @@ let controls;
 let scene;
 let renderer;
 let sprite;
-let spriteBehindObject;
+let spritesBehindObject = [];
+let myRenderer;
 
+let meshDistance;
 let loadPercent;
 let fbGroup;
 
-let linePos = [];
 let lines = [];
-let pos = { lineFir: [],
-            lineSec: [],
-            ann: []};
-const selectors = ['.sloper30','.sloper20'];
+let pos = {
+    lineFir: [],
+    lineSec: [],
+    ann: []
+};
+const selectors = ['.sloper30', '.sloper20'];
 // 2 x 30 Degree Slopers  -- done
 // 2 x 20 Degree Slopers  -- done
 // 1 x Center Jug
@@ -29,6 +33,8 @@ const selectors = ['.sloper30','.sloper20'];
 
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
+
+
 
 init();
 animate();
@@ -48,7 +54,10 @@ function init() {
     fbGroup = createfbGroup(0, -75, 0);
 
     // line
-    pos.lineFir = [[-165, 134, 34], [-83, 141, 34]];
+    pos.lineFir = [
+        [-165, 134, 34],
+        [-83, 141, 34]
+    ];
     const difference = [15, 27, 26];
     for (let i = 0; i < pos.lineFir.length; i++) {
         lines[i] = createLine(pos.lineFir[i]);
@@ -62,6 +71,8 @@ function init() {
 
     // spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
     // const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
+
+    meshDistance = camera.position.distanceTo(fbGroup.position);
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -186,7 +197,7 @@ function createfbGroup(x, y, z) {
     fbGroup.position.set(x, y, z);
     fbGroup.rotation.set(0, 0, 0);
     fbGroup.visible = false;
-    scene.add( fbGroup );
+    scene.add(fbGroup);
 
     return fbGroup;
 }
@@ -239,12 +250,12 @@ function loadObject(objpath, material, parent) {
             });
             parent.add(object);
         },
-        function ( xhr ) {
-            loadPercent = Math.round( xhr.loaded / xhr.total * 100 );
+        function(xhr) {
+            loadPercent = Math.round(xhr.loaded / xhr.total * 100);
             document.querySelector('.percent').innerHTML = loadPercent;
         },
-        function ( error ) {
-            console.log( 'An error happened' );
+        function(error) {
+            console.log('An error happened');
         }
     );
 }
@@ -287,42 +298,48 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateAnnotationOpacity() {
-        const meshDistance = camera.position.distanceTo(fbGroup.position);
-        lines.map(l => {
-            let spriteDistance = camera.position.distanceTo(l.position);
-            spriteBehindObject = spriteDistance > meshDistance;
-            l.visible = spriteBehindObject ? false : true;
-        });
+function updateAnnotationOpacity(annPos) {
+    annPos.map((p, i) => {
+        const vec = new THREE.Vector3(p[0], p[1], p[2]);
+        let spriteDistance = camera.position.distanceTo(vec);
+        spritesBehindObject[i] = spriteDistance > meshDistance;
+    });
 }
 
-function updateScreenPosition(annotPos) {
+// function spritesBehindObject(annPos, meshPos) {
+//     let vec = new THREE.Vector3(annPos[0], annPos[1], annPos[2]);
+//     let meshDistance = camera.position.distanceTo(meshPos); // should be fbGroup.position
+//     let spriteDistance = camera.position.distanceTo(vec);
+//     return spriteDistance > meshPos;
+// }
+
+function updateScreenPosition(annPos, selects) {
     let ann = [];
     let canvas = renderer.domElement;
 
-    for (let i = 0; i < annotPos.length; i++) {
-        const pos = annotPos[i];
-        const vec = new THREE.Vector3(pos[0], pos[1], pos[2]);
-
+    annPos.map((p, i) => {
+        const vec = new THREE.Vector3(p[0], p[1], p[2]);
         vec.project(camera);
         vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
         vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
 
-        ann = document.querySelector(selectors[i]);
+        ann = document.querySelector(selects[i]);
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
-        ann.style.opacity = spriteBehindObject ? 0.1 : 1;
-    }
+        ann.style.opacity = spritesBehindObject[i] ? 0.1 : 1;
+        lines[i].visible = spritesBehindObject[i] ? false : true;
+    });
 }
 
 function animate() {
-    requestAnimationFrame(animate);
+    // console.log(this);
+    window.requestAnimationFrame(animate);
     controls.update();
-    render();
+    render(scene, camera, pos.ann, selectors);
 }
 
-function render() {
-    renderer.render(scene, camera);
-    updateAnnotationOpacity();
-    updateScreenPosition(pos.ann);
+function render(sc, cam, ann, selects) {
+    renderer.render(sc, cam);
+    updateAnnotationOpacity(pos.ann);
+    updateScreenPosition(ann, selects);
 }
