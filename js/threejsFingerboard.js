@@ -5,12 +5,8 @@ let camera;
 let controls;
 let scene;
 let renderer;
-let sprite;
-let spritesBehindObject = [];
-let myRenderer;
 
 let meshDistance;
-let loadPercent;
 let fbGroup;
 
 let lines = [];
@@ -19,17 +15,11 @@ let pos = {
     lineSec: [],
     ann: []
 };
-const selectors = ['.sloper30', '.sloper20'];
-// 2 x 30 Degree Slopers  -- done
-// 2 x 20 Degree Slopers  -- done
-// 1 x Center Jug
-// 2 x Large Jugs
-// 5 x 4 Finger Pockets (deep)
-// 4 x 3 Finger Pockets (deep)
-// 3 x 2 Finger Pockets (deep)
-// 3 x 4 Finger Crimps
-// 2 x 3 Finger Crimps
-// 2 x 2 Finger Crimps
+
+const selectors = ['.sloper30', '.sloper20', '.jugL', '.jugC',
+    '.fingPock2', '.fingPock3', '.fingPock4',
+    '.fingCrimp4', '.fingCrimp3', '.fingCrimp2'
+];
 
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
@@ -50,11 +40,20 @@ function init() {
 
     // Empty Group
     fbGroup = createfbGroup(0, -75, 0);
+    meshDistance = camera.position.distanceTo(fbGroup.position);
 
-    // line
+    // lines
     pos.lineFir = [
-        [-165, 134, 34],
-        [-83, 141, 34]
+        [-165, 134, 34], // 30 sloper
+        [-83, 141, 34], //20 sloper
+        [0, 68, 55], // large Jug
+        [0, 24, 40], // central Jug
+        [-91, 68, 55], // 2 Finger Pocket
+        [-161, 68, 55], // 3 Finger Pocket
+        [-253, 68, 55], // 4 Finger Pocket
+        [-103, 25, 40], // 2 Finger Cripm
+        [-188, 25, 40], // 3 Finger Cripm
+        [-270, 25, 40] // 4 Finger Cripm
     ];
     const difference = [15, 27, 26];
     for (let i = 0; i < pos.lineFir.length; i++) {
@@ -66,8 +65,6 @@ function init() {
         pos.lineSec.push([d0, d1, d2]);
         pos.ann.push([d0, d1 - 75, d2]);
     }
-
-    meshDistance = camera.position.distanceTo(fbGroup.position);
 
     //MATERIALS
     const backgroundMat = createBackgroundMaterial();
@@ -87,22 +84,24 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     //LOADER
-    loadingScreen();
+    loadingScreen(fbGroup);
 
     // //helper sphere 
-    // var geo = new THREE.SphereGeometry( 5, 32, 32 );
-    // var mat = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    // var sphere = new THREE.Mesh( geo, mat );
-    // sphere.position.set(-83, 141, 34);
-    // fbGroup.add( sphere );
+    // var geo = new THREE.SphereGeometry(5, 32, 32);
+    // var mat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    // var sphere = new THREE.Mesh(geo, mat);
+    // sphere.position.set(-253, 25, 55);
+    // fbGroup.add(sphere);
 
     // //Line Sphere Helper GUI
     // var gui = new dat.GUI();
     // var lineGui = gui.addFolder('Line position');
-    // lineGui.add(sphere.position, 'x', -180, -80);
-    // lineGui.add(sphere.position, 'y', 120, 200);
-    // lineGui.add(sphere.position, 'z', 20, 80);
+    // lineGui.add(sphere.position, 'x', -300, -100);
+    // lineGui.add(sphere.position, 'y', 0, 200);
+    // lineGui.add(sphere.position, 'z', 20, 180);
 }
+
+// end of init()
 
 //ANNOTATIONS AND SPRITES
 // const canvas = document.createElement('canvas');
@@ -249,7 +248,7 @@ function loadObject(objpath, material, parent) {
             parent.add(object);
         },
         function(xhr) {
-            loadPercent = Math.round(xhr.loaded / xhr.total * 100);
+            let loadPercent = Math.round(xhr.loaded / xhr.total * 100);
             document.querySelector('.percent').innerHTML = loadPercent;
         },
         function(error) {
@@ -273,7 +272,7 @@ function createGUI() {
     sportlightGui.add(spotLight.rotation, 'z', 0, 2 * Math.PI);
 }
 
-function loadingScreen() {
+function loadingScreen(fbGroup) {
     const loaderDiv = document.getElementById('loader');
     THREE.DefaultLoadingManager.onStart = function() {
         loaderDiv.style.display = 'block';
@@ -287,6 +286,7 @@ function loadingScreen() {
 
 //FUNCTION FOR CREATING RENDERER
 function createRenderer(clearColour) {
+    let myRenderer;
     myRenderer = new THREE.WebGLRenderer({ antialias: true });
     myRenderer.shadowMap.enabled = true; //enabling shadow maps in the renderer
     myRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -296,13 +296,14 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateScreenPosition(annPos, selects) {
-    let ann = [];
+function updateScreenPosition(annPos, meshDist, selects) {
+    let ann;
     let canvas = renderer.domElement;
 
     annPos.map((p, i) => {
         const vec = new THREE.Vector3(p[0], p[1], p[2]);
         const vec2 = new THREE.Vector3(p[0], p[1] - 27, p[2]);
+        let spritesBehindObject;
 
         // Annotation position
         vec.project(camera);
@@ -315,21 +316,19 @@ function updateScreenPosition(annPos, selects) {
 
         // opacity
         let spriteDistance = camera.position.distanceTo(vec2);
-        spritesBehindObject = spriteDistance > meshDistance;
+        spritesBehindObject = spriteDistance > meshDist;
         ann.style.opacity = spritesBehindObject ? 0.1 : 1;
         lines[i].visible = spritesBehindObject ? false : true;
     });
 }
 
 function animate() {
-    // console.log(this);
     window.requestAnimationFrame(animate);
-    controls.update();
-    render(scene, camera, pos.ann, selectors);
+    render(controls, scene, camera, pos.ann, meshDistance, selectors);
 }
 
-function render(sc, cam, ann, selects) {
+function render(ctrls, sc, cam, ann, meshDist, selects) {
+    ctrls.update(); // moved from animate fn
     renderer.render(sc, cam);
-    // updateAnnotationOpacity(pos.ann);
-    updateScreenPosition(ann, selects);
+    updateScreenPosition(ann, meshDist, selects);
 }
