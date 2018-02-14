@@ -34,8 +34,6 @@ const selectors = ['.sloper30', '.sloper20'];
 const annDiv = document.getElementById('ann');
 annDiv.style.display = 'none';
 
-
-
 init();
 animate();
 
@@ -68,9 +66,6 @@ function init() {
         pos.lineSec.push([d0, d1, d2]);
         pos.ann.push([d0, d1 - 75, d2]);
     }
-
-    // spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
-    // const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
     meshDistance = camera.position.distanceTo(fbGroup.position);
 
@@ -107,13 +102,14 @@ function init() {
     // lineGui.add(sphere.position, 'x', -180, -80);
     // lineGui.add(sphere.position, 'y', 120, 200);
     // lineGui.add(sphere.position, 'z', 20, 80);
-
-    //ANNOTATIONS
-    // const canvas = document.createElement('canvas');
-    // const context = canvas.getContext('2d');
 }
 
-// FUNCTIONS
+//ANNOTATIONS AND SPRITES
+// const canvas = document.createElement('canvas');
+// const context = canvas.getContext('2d');
+
+// spr1 = createSprite(-165, 133, 34, 'tex/annotations/1.png', 1, fbGroup); //sloper 30 degrees
+// const spr2 = createSprite(-87, 181, 50, 'tex/annotations/1.png', 1, fbGroup); //sloper 20 degrees
 
 // Annotations and Sprites 
 // function createSprite(x, y, z, tex, scale, parent) {
@@ -127,6 +123,8 @@ function init() {
 
 //     return sprite;
 // }
+
+// FUNCTIONS
 
 //Materials and Textures
 function repeatTex(mapName, repeat) {
@@ -298,27 +296,15 @@ function createRenderer(clearColour) {
     return myRenderer;
 }
 
-function updateAnnotationOpacity(annPos) {
-    annPos.map((p, i) => {
-        const vec = new THREE.Vector3(p[0], p[1], p[2]);
-        let spriteDistance = camera.position.distanceTo(vec);
-        spritesBehindObject[i] = spriteDistance > meshDistance;
-    });
-}
-
-// function spritesBehindObject(annPos, meshPos) {
-//     let vec = new THREE.Vector3(annPos[0], annPos[1], annPos[2]);
-//     let meshDistance = camera.position.distanceTo(meshPos); // should be fbGroup.position
-//     let spriteDistance = camera.position.distanceTo(vec);
-//     return spriteDistance > meshPos;
-// }
-
 function updateScreenPosition(annPos, selects) {
     let ann = [];
     let canvas = renderer.domElement;
 
     annPos.map((p, i) => {
         const vec = new THREE.Vector3(p[0], p[1], p[2]);
+        const vec2 = new THREE.Vector3(p[0], p[1] - 27, p[2]);
+
+        // Annotation position
         vec.project(camera);
         vec.x = Math.round((0.5 + vec.x / 2) * (canvas.clientWidth / window.devicePixelRatio));
         vec.y = Math.round((0.5 - vec.y / 2) * (canvas.clientHeight / window.devicePixelRatio)); //changed from canvas.height to canvas.clienntHeight
@@ -326,8 +312,12 @@ function updateScreenPosition(annPos, selects) {
         ann = document.querySelector(selects[i]);
         ann.style.top = `${vec.y}px`;
         ann.style.left = `${vec.x}px`;
-        ann.style.opacity = spritesBehindObject[i] ? 0.1 : 1;
-        lines[i].visible = spritesBehindObject[i] ? false : true;
+
+        // opacity
+        let spriteDistance = camera.position.distanceTo(vec2);
+        spritesBehindObject = spriteDistance > meshDistance;
+        ann.style.opacity = spritesBehindObject ? 0.1 : 1;
+        lines[i].visible = spritesBehindObject ? false : true;
     });
 }
 
@@ -340,6 +330,6 @@ function animate() {
 
 function render(sc, cam, ann, selects) {
     renderer.render(sc, cam);
-    updateAnnotationOpacity(pos.ann);
+    // updateAnnotationOpacity(pos.ann);
     updateScreenPosition(ann, selects);
 }
