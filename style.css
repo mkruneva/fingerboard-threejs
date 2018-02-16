@@ -27,15 +27,34 @@ body {
     margin-left: 15px;
     margin-top: -35px;
     color: #fff;
-    background: rgba(50, 50, 50, 0.8);
+    background: rgba(50, 50, 50, 0.7);
     border-radius: .1em;
     font-size: 15px;
     line-height: 1.2;
     transition: opacity .5s;
+    cursor: pointer;
+}
+
+#ann>div:hover {
+    background: rgba(50, 50, 50, 0.95);
 }
 
 #ann>div>p {
     margin: 3px;
+}
+
+.showOrNot {
+    position: absolute;
+    left: 2%;
+    bottom: 4%;
+    z-index: 4;
+    color: rgba(230, 230, 230, 0.84);
+    background: rgba(50, 50, 50, 0.8);
+    padding: 0.5em;
+    text-align: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 100%;
+    cursor: pointer;
 }
 
 
@@ -67,18 +86,6 @@ body {
     text-align: center;
     font-family: "Comic Sans MS", cursive, sans-serif;
     font-size: 150%;
-}
-
-.showOrNot {
-    position: absolute;
-    left: 4%;
-    top: 4%;
-    z-index: 4;
-    color: rgba(230, 230, 230, 0.84);
-    text-align: center;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-size: 100%;
-    cursor: pointer;
 }
 
 @-webkit-keyframes spin {
