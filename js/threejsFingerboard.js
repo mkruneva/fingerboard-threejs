@@ -86,14 +86,14 @@ $(document).ready(function() {
         } else { linesGroup.visible = false }
 
         //MATERIALS
-        const backgroundMat = createBackgroundMaterial();
+        // const backgroundMat = createBackgroundMaterial();  // no background
         const fingerboardMat = createFingerBoardMaterial();
 
         //LIGHTS
         createLights();
 
-        // CREATE BACKGROUND PLANE 
-        createBackgroundPlane(backgroundMat);
+        // CREATE BACKGROUND PLANE
+        // createBackgroundPlane(backgroundMat);  // no background
 
         //LOAD FINGERBOARD
         let fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, fbGroup);
@@ -167,14 +167,14 @@ $(document).ready(function() {
         return material;
     }
 
-    function createBackgroundPlane(material) {
-        var geometry = new THREE.PlaneGeometry(3000, 3000);
-        var plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0, 0, -1400);
-        camera.add(plane);
+    // function createBackgroundPlane(material) {
+    //     var geometry = new THREE.PlaneGeometry(3000, 3000);
+    //     var plane = new THREE.Mesh(geometry, material);
+    //     plane.position.set(0, 0, -1400);
+    //     camera.add(plane);
 
-        return plane;
-    }
+    //     return plane;
+    // }
 
     function createfbGroup(x, y, z) {
         const fbGroup = new THREE.Object3D;
@@ -260,10 +260,10 @@ $(document).ready(function() {
     //FUNCTION FOR CREATING RENDERER
     function createRenderer(clearColour) {
         let myRenderer;
-        myRenderer = new THREE.WebGLRenderer({ antialias: true });
+        myRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         myRenderer.shadowMap.enabled = true; //enabling shadow maps in the renderer
         myRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        myRenderer.setClearColor(clearColour, 1);
+        myRenderer.setClearColor(clearColour, 0);
         myRenderer.setSize(window.innerWidth, window.innerHeight);
 
         return myRenderer;
