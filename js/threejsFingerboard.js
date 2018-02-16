@@ -72,15 +72,16 @@ $(document).ready(function() {
                 [-188, 25, 40], // 3 Finger Cripm
                 [-270, 25, 40] // 4 Finger Cripm
             ];
-            const difference = [15, 27, 26];
+            const difference = [10, 10, 20];
             for (let i = 0; i < pos.lineFir.length; i++) {
-                lines[i] = createLine(pos.lineFir[i]);
                 const d0 = pos.lineFir[i][0] + difference[0];
                 const d1 = pos.lineFir[i][1] + difference[1];
                 const d2 = pos.lineFir[i][2] + difference[2];
 
                 pos.lineSec.push([d0, d1, d2]);
                 pos.ann.push([d0, d1 - 75, d2]);
+
+                lines[i] = createLine(pos.lineFir[i], pos.lineSec[i]);
             }
         } else { linesGroup.visible = false }
 
@@ -187,11 +188,11 @@ $(document).ready(function() {
     }
 
     // Line 
-    function createLine([x, y, z]) {
+    function createLine(fp, sp) {
         const material = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.4, linecap: 'round' });
         let geometry = new THREE.Geometry();
-        geometry.vertices.push(new THREE.Vector3(x, y, z));
-        geometry.vertices.push(new THREE.Vector3(x + 15, y + 27, z + 26));
+        geometry.vertices.push(new THREE.Vector3(fp[0], fp[1], fp[2]));
+        geometry.vertices.push(new THREE.Vector3(sp[0], sp[1], sp[2]));
         let line = new THREE.Line(geometry, material);
         line.visible = false;
         linesGroup.add(line);
