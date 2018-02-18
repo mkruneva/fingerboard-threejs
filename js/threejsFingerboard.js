@@ -3,6 +3,8 @@ $(document).ready(function() {
     "use strict";
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
+    const baseURL = '';
+
     let camera;
     let controls;
     let scene;
@@ -46,7 +48,7 @@ $(document).ready(function() {
         camera.position.set(-50, 0, 750);
 
         //RENDER
-        renderer = createRenderer(0x222222);
+        renderer = createRenderer(0x222222, 0.5);
         const parent = document.getElementById('canvasContainer');
         parent.appendChild(renderer.domElement);
 
@@ -96,7 +98,7 @@ $(document).ready(function() {
         // createBackgroundPlane(backgroundMat);  // no background
 
         //LOAD FINGERBOARD
-        let fingerb = loadObject('obj/fingerboard-obj.obj', fingerboardMat, fbGroup);
+        let fingerb = loadObject(baseURL + '/obj/fingerboard-obj.obj', fingerboardMat, fbGroup);
         // console.log('fingerb is ', fingerb); // fingerb is undefined ?
 
         //Controls
@@ -122,17 +124,17 @@ $(document).ready(function() {
 
     function loadTextures() {
         var maps = {
-            diffTex: new THREE.TextureLoader().load('tex/beech_wood_albedo.jpg'),
-            aoTex: new THREE.TextureLoader().load('tex/beech_wood_ao.png'),
-            nrmTex: new THREE.TextureLoader().load('tex/beech_wood_anormal.png'),
-            roughtTex: new THREE.TextureLoader().load('tex/beech_wood_rough.png'),
-            backgroundTex: new THREE.TextureLoader().load('tex/background.jpg'),
+            diffTex: new THREE.TextureLoader().load(baseURL + '/tex/beech_wood_albedo.jpg'),
+            aoTex: new THREE.TextureLoader().load(baseURL + '/tex/beech_wood_ao.png'),
+            nrmTex: new THREE.TextureLoader().load(baseURL + '/tex/beech_wood_anormal.png'),
+            roughtTex: new THREE.TextureLoader().load(baseURL + '/tex/beech_wood_rough.png'),
+            backgroundTex: new THREE.TextureLoader().load(baseURL + '/tex/background.jpg'),
         }
         repeatTex(maps.diffTex, 3);
         repeatTex(maps.nrmTex, 3);
         repeatTex(maps.backgroundTex, 3);
         maps.envCubeMap = new THREE.CubeTextureLoader()
-            .setPath('tex/cubemap/')
+            .setPath(baseURL + '/tex/cubemap/')
             .load([
                 'posx.jpg',
                 'negx.jpg',
@@ -258,12 +260,12 @@ $(document).ready(function() {
     }
 
     //FUNCTION FOR CREATING RENDERER
-    function createRenderer(clearColour) {
+    function createRenderer(clearColour, alpha) {
         let myRenderer;
         myRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         myRenderer.shadowMap.enabled = true; //enabling shadow maps in the renderer
         myRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        myRenderer.setClearColor(clearColour, 0);
+        myRenderer.setClearColor(clearColour, alpha);
         myRenderer.setSize(window.innerWidth, window.innerHeight);
 
         return myRenderer;
